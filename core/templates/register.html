@@ -1,33 +1,39 @@
+{% load static %}
 {% include "header.html" %}
 
+<title>{{title}}</title>
 <div class="container">
-    {% csrf_token %}
+    <div class = "jumbotron">
+        <h1>User Registration</h1>
+        <form method="POST">{% csrf_token %}
 
-    <form action="/login/" method="POST">
+                <div class="form-group">
+                    <label>First Name</label>
+                    {{ registerUserform.first_name }}
+                </div>
 
-        <div class="form-group">
-            <label>Email</label>
-            {{ register_form.email }}
-        </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    {{ registerUserform.last_name }}
+                </div>
 
-        <div class="form-group">
-            <label>Password</label>
-            {{ register_form.password }}
-        </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    {{ registerUserform.username }}
+                </div>
 
-        <div class="form-group">
-            <label>First Name</label>
-            {{ register_form.first_name }}
-        </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    {{ registerUserform.email }}
+                </div>
 
-        <div class="form-group">
-            <label>Last Name</label>
-            {{ register_form.last_name }}
-        </div>
-
-        <div class="form-group">
-            <input type="submit" class="btn btn-success regisBtn" value = "Register"/>
-        </div>
-
-    </form>
+                <div class="form-group">
+                    <label>Password</label>
+                    {{ registerUserform.password }}
+                </div>
+                
+                
+                <input type="submit" class="btn btn-success loginregisBtn" value = "Register"/>
+        </form>
+    </div>
 </div>

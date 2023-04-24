@@ -1,12 +1,17 @@
 from django import forms
 from django.contrib.auth.models import User
 
-class RegistrationForm(forms.Form):
-    password = forms.CharField(widget=forms.PasswordInput)
-    email = forms.CharField(widget=forms.TextInput)
-    first_name = forms.CharField(widget=forms.TextInput)
-    last_name = forms.CharField(widget=forms.TextInput)
+class RegistrationForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}))
+    email = forms.CharField(widget=forms.TextInput(attrs={'size': '30'}))
+    class Meta():
+        model = User
+        fields = ('first_name', 'last_name', 'username', 'email', 'password')
+        help_texts = {
+            'username': None
+        }
+
 
 class LoginForm(forms.Form):
-    email = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())
