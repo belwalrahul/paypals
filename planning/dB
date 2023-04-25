@@ -1,0 +1,26 @@
+User
+	'first_name', 'last_name', 'username'<u1>, 'email', 'password'
+	groups <g1, g2, g3>
+
+	'first_name', 'last_name', 'username'<u2>, 'email', 'password'
+	groups <g4, g2, g3>
+
+Member List
+	Group Name: Name, List of Users:list
+
+Group
+	Group Name: varchar, desc: varchar, amount:decimal, paid_by:varchar, owed_by:list, split_list: list
+
+
+
+
+
+
+
+
+
+
+select username from user where groups="%g2, %"
+
+u1
+u2
