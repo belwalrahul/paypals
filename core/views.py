@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from core.forms import LoginForm, RegistrationForm, NewGroup
+from core.forms import LoginForm, RegistrationForm, NewGroup, AddFriendForm
 from core.models import Friend
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -26,6 +26,45 @@ def add_transaction(request):
 @login_required(login_url='/login/')
 def about(request):
     return render(request, 'about.html')
+
+@login_required(login_url='/login/')
+def friends_list(request):
+    try:
+        friend_obj = Friend.objects.get(user=request.user)
+        # print(friend_obj.friends)
+        friends = friend_obj.friends.all()
+    except Friend.DoesNotExist:
+        friends = []
+
+    return render(request, 'friends_list.html', {'friends': friends})
+
+@login_required(login_url='/login/')
+def add_friend(request):
+    if request.method == 'POST':
+        form = AddFriendForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            try:
+                friend = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return render(request, 'add_friend.html', {'form': form, 'error': 'User with this email does not exist.'})
+            # friend_obj = Friend.objects.get(user=request.user)
+            friend_obj = Friend.objects.get_or_create(user=request.user)
+        # Add the friend to the current user's friends list
+            if friend:
+                friend_obj, created = Friend.objects.get_or_create(user=request.user)
+                friend_obj.friends.add(friend)
+
+            # Add the current user to the friend's friends list
+                friend_obj, created = Friend.objects.get_or_create(user=friend)
+                friend_obj.friends.add(request.user)
+
+                return redirect('home.html')
+            else:
+                return render(request, 'add_friend.html', {'form': form})
+    else:
+        form = AddFriendForm()
+    return render(request, 'add_friend.html', {'form': form})
 
 
 def callRegisterUserForm(request):
