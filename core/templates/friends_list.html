@@ -1,0 +1,9 @@
+{% include "header.html" %}
+<h1>Friends List</h1>
+<ul>
+    {% for friend in friends %}
+        <li>{{ friend.username }}</li>
+    {% empty %}
+        <li>No friends yet.</li>
+    {% endfor %}
+</ul>

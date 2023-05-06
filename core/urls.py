@@ -8,5 +8,7 @@ urlpatterns = [
     path('logout/', views.callUserLogOutFn),
     path('about/', views.about),
     path('add_transaction/', views.add_transaction),
-    path('groups/', views.groups)
+    path('groups/', views.groups),
+    path('add_friend/', views.add_friend),
+    path('friends/', views.friends_list)
 ]

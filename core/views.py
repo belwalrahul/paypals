@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
-from core.forms import LoginForm, RegistrationForm
+from core.forms import LoginForm, RegistrationForm, AddFriendForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
+from django.contrib.auth.models import User
+from .models import Friend
 
 # Create your views here.
 
@@ -21,6 +23,40 @@ def add_transaction(request):
 @login_required(login_url='/login/')
 def about(request):
     return render(request, 'about.html')
+
+@login_required(login_url='/login/')
+def friends_list(request):
+    try:
+        friend_obj = Friend.objects.get(user=request.user)
+        # print(friend_obj.friends)
+        friends = friend_obj.friends.all()
+    except Friend.DoesNotExist:
+        friends = []
+
+    return render(request, 'friends_list.html', {'friends': friends})
+
+@login_required(login_url='/login/')
+def add_friend(request):
+    if request.method == 'POST':
+        form = AddFriendForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            try:
+                friend = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return render(request, 'add_friend.html', {'form': form, 'error': 'User with this email does not exist.'})
+            # friend_obj = Friend.objects.get(user=request.user)
+            friend_obj = Friend.objects.get_or_create(user=request.user)
+            if friend not in friend_obj.friends.all():
+                friend_obj.friends.add(friend)
+                # TODO add modal here later for successful friend addition or something
+                return render(request, 'home.html')
+                # TODO ?
+            else:
+                return render(request, 'add_friend.html', {'form': form})
+    else:
+        form = AddFriendForm()
+    return render(request, 'add_friend.html', {'form': form})
 
 
 def callRegisterUserForm(request):

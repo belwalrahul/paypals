@@ -1,0 +1,7 @@
+{% include "header.html" %}
+<h1>Add Friend</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Add Friend</button>
+</form>

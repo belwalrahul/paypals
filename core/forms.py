@@ -15,3 +15,7 @@ class RegistrationForm(forms.ModelForm):
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
+
+
+class AddFriendForm(forms.Form):
+    email = forms.EmailField()
