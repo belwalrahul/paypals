@@ -5,7 +5,7 @@ User
 	'first_name', 'last_name', 'username'<u2>, 'email', 'password'
 	groups <g4, g2, g3>
 
-Member List
+Group
 	groupID: number, Group Name: Name, List of Users:list
 
 Transactions
