@@ -10,6 +10,19 @@ from django.http import HttpResponse
 def home(request):
     return render(request, 'home.html')
 
+@login_required(login_url='/login/')
+def groups(request):
+    return render(request, 'groups.html')
+
+@login_required(login_url='/login/')
+def add_transaction(request):
+    return render(request, 'add_transaction.html')
+
+@login_required(login_url='/login/')
+def about(request):
+    return render(request, 'about.html')
+
+
 def callRegisterUserForm(request):
     if (request.method=='POST'):
         registerUserform = RegistrationForm(request.POST)
