@@ -9,11 +9,11 @@ Group
 	groupID: number, Group Name: Name, List of Users:list
 
 Transactions
-	[foreign]groupID: varchar, desc: varchar, amount:decimal, paid_by:varchar, owed_by:list, split_list: list
-	4, for rent, 458, tanmay, "tanmay, rahul, jait", "10, 50, 40"
-	3, for rent, 458, tanmay, "tanmay, rahul", "60, 40"
-	2, for rent, 458, tanmay, "tanmay, rahul, jait", "60, 40"
-	0, car, 22, tanmay, "tanmay, jait", "0, 100"
+	[]groupID: interger, desc: varchar, amount:decimal, paid_by:varchar, owed_by:list
+	4, for rent, 458, tanmay, "tanmay, rahul, jait"
+	3, for rent, 458, tanmay, "tanmay, rahul"
+	2, for rent, 458, tanmay, "tanmay, rahul, jait"
+	0, car, 22, tanmay, "tanmay, jait"
 
 
 
