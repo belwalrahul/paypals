@@ -47,11 +47,16 @@ def add_friend(request):
                 return render(request, 'add_friend.html', {'form': form, 'error': 'User with this email does not exist.'})
             # friend_obj = Friend.objects.get(user=request.user)
             friend_obj = Friend.objects.get_or_create(user=request.user)
-            if friend not in friend_obj.friends.all():
+        # Add the friend to the current user's friends list
+            if friend:
+                friend_obj, created = Friend.objects.get_or_create(user=request.user)
                 friend_obj.friends.add(friend)
-                # TODO add modal here later for successful friend addition or something
-                return render(request, 'home.html')
-                # TODO ?
+
+            # Add the current user to the friend's friends list
+                friend_obj, created = Friend.objects.get_or_create(user=friend)
+                friend_obj.friends.add(request.user)
+
+                return redirect('home.html')
             else:
                 return render(request, 'add_friend.html', {'form': form})
     else:
