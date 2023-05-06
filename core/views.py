@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from core.forms import LoginForm, RegistrationForm
+from core.forms import LoginForm, RegistrationForm, NewGroup
+from core.models import Friend
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
-
 # Create your views here.
 
 @login_required(login_url='/login/')
@@ -13,6 +13,11 @@ def home(request):
 @login_required(login_url='/login/')
 def groups(request):
     return render(request, 'groups.html')
+
+@login_required(login_url='/login/')
+def add_groups(request):
+    Groupform = NewGroup(request.user)
+    return render(request, 'addgroups.html',{ "Groupform": Groupform})
 
 @login_required(login_url='/login/')
 def add_transaction(request):

@@ -7,10 +7,10 @@
         {% include "header.html" %}
       <div class="container">
         <div class="row justify-content-center">
-          <h1>Groups</h1>
-          <div class="col-12">
-            <button onclick="location.href='/groups/add'" type="button" class="btn btn-primary">Add task</button>
-          </div>
+          <h1>Add Groups</h1>
+          <div>
+          {{ Groupform.as_table }}
+        </div>
         </div>
       </div>
     </body> 
