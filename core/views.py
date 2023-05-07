@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from core.forms import LoginForm, RegistrationForm, NewGroup, AddFriendForm, TransactionForm
-from core.models import Friend, Transactions
+from core.models import Friend, Transactions, Group
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
@@ -29,7 +29,15 @@ def home(request):
 
 @login_required(login_url='/login/')
 def groups(request):
-    return render(request, 'groups.html')
+    print(request.user.id)
+    print(request.user.userList.all())
+    groups = Group.objects.filter(userList = request.user.id)
+    groupnames = [group.groupName for group in groups]
+    members = [group.userList.all() for group in groups]
+    for group in groups:
+        print(group.groupName)
+    page_data = { "groups": groups, "groupnames": groupnames, "members": members }
+    return render(request, 'groups.html', page_data)
 
 @login_required(login_url='/login/')
 def account_settings(request):
@@ -39,8 +47,25 @@ def account_settings(request):
 
 @login_required(login_url='/login/')
 def add_groups(request):
-    Groupform = NewGroup(request.user)
-    return render(request, 'addgroups.html',{ "Groupform": Groupform})
+    userList = Friend.objects.filter(user=request.user).values_list('friends__id', 'friends__username')
+    userList = [User(id=friend[0], username=friend[1]) for friend in userList]
+    if (request.method == "POST"):
+        print("POST")
+        Groupform = NewGroup(request.POST,userList=userList)
+        if Groupform.is_valid():
+            groupname = Groupform.cleaned_data['groupName']
+            friends_list = Groupform.cleaned_data['userList'] | User.objects.filter(id=request.user.id)
+            print(friends_list)
+            group = Group.objects.create(groupName=groupname)
+            group.userList.set(friends_list)
+            group.save()
+            return redirect('/groups')
+        else:
+            return redirect('/groups')
+    else:
+        Groupform = NewGroup(userList=userList)
+        page_data = { "Groupform": Groupform  }
+        return render(request, 'addgroups.html',page_data)
 
 @login_required(login_url='/login/')
 def add_transaction(request):
