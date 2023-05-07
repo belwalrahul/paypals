@@ -11,19 +11,39 @@
       </tr>
     </thead>
     <tbody>
-      {% for transaction in transactions %}
-        <tr>
-          <td>{{ transaction.groupID }}</td>
-          <td>{{ transaction.description }}</td>
-          <td>{{ transaction.amount }}</td>
-          <td>{{ transaction.paid_by }}</td>
-          <td>{{ transaction.owed_by }}</td>
-        </tr>
-      {% empty %}
-        <tr>
-          <td colspan="3">No transactions found.</td>
-        </tr>
-      {% endfor %}
+      {% for transaction, owed_by in transactions.items %}
+            <tr>
+            <td>{{ transaction.groupID }}</td>
+            <td>{{ transaction.description }}</td>
+            <td>{{ transaction.amount }}</td>
+            <td>{{ transaction.paid_by }}</td>
+            <td>
+                {% for owed in owed_by %}
+                    {{ owed.first_name }},&nbsp;
+                {% endfor %}
+            </td>
+            </tr>
+        {% empty %}
+            <tr>
+            <td colspan="3">No transactions found.</td>
+            </tr>
+        {% endfor %}
     </tbody>
-  </table>
+</table>
+
+<hr />
+
+<table>
+    <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.first_name }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3">No user found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+</table>
   
