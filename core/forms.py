@@ -1,5 +1,5 @@
 from django import forms
-from core.models import Friend,Group
+from core.models import Friend,Group, Transactions
 from django.contrib.auth.models import User
 
 class RegistrationForm(forms.ModelForm):
@@ -27,3 +27,8 @@ class NewGroup(forms.Form):
 
 class AddFriendForm(forms.Form):
     email = forms.EmailField()
+
+class TransactionForm(forms.ModelForm):
+    class Meta:
+        model = Transactions
+        fields = ('groupID', 'description', 'amount', 'paid_by', 'owed_by')

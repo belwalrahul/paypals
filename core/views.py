@@ -1,14 +1,23 @@
 from django.shortcuts import render, redirect
-from core.forms import LoginForm, RegistrationForm, NewGroup, AddFriendForm
-from core.models import Friend
+from core.forms import LoginForm, RegistrationForm, NewGroup, AddFriendForm, TransactionForm
+from core.models import Friend, Transactions
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
+from django.contrib.auth.models import User
 # Create your views here.
 
 @login_required(login_url='/login/')
 def home(request):
-    return render(request, 'home.html')
+    page_data = {}
+    try:
+        transactions = Transactions.objects.filter(paid_by = request.user)
+        # print("----------------> " + transactions + " <----------------")a
+        page_data = { "transactions": transactions }
+    except Transactions.DoesNotExist:
+        page_data = {}
+
+    return render(request, 'home.html', page_data)
 
 @login_required(login_url='/login/')
 def groups(request):
@@ -21,7 +30,26 @@ def add_groups(request):
 
 @login_required(login_url='/login/')
 def add_transaction(request):
-    return render(request, 'add_transaction.html')
+    if request.method == 'POST':
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            f_groupID = form.cleaned_data['groupID']
+            f_description = form.cleaned_data['description']
+            f_amount = form.cleaned_data['amount']
+            f_paid_by = form.cleaned_data['paid_by']
+            f_owed_by = form.cleaned_data['owed_by']
+
+            transaction = Transactions.objects.create(groupID = f_groupID, description = f_description, amount = f_amount, paid_by = f_paid_by)
+            transaction.owed_by.set(f_owed_by)
+            transaction.save()
+
+            return redirect('/')
+
+    else:
+        transaction_form = TransactionForm()
+        page_data = { "transaction_form": transaction_form }
+
+        return render(request, 'add_transaction.html', page_data)
 
 @login_required(login_url='/login/')
 def about(request):
