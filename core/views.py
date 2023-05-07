@@ -9,13 +9,21 @@ from django.contrib.auth.models import User
 
 @login_required(login_url='/login/')
 def home(request):
+    trans_obj = Transactions.objects.filter(paid_by=request.user)
+    # print(friend_obj.friends)
+    trans_owed_by = trans_obj
     page_data = {}
+    transaction_data = {}
     try:
         transactions = Transactions.objects.filter(paid_by = request.user)
+        for transaction in transactions:
+            transaction_data[transaction] = transaction.owed_by.all()
         # print("----------------> " + transactions + " <----------------")a
-        page_data = { "transactions": transactions }
+        page_data = { "transactions": transaction_data}
     except Transactions.DoesNotExist:
         page_data = {}
+
+    print(transaction_data)
 
     return render(request, 'home.html', page_data)
 
@@ -30,6 +38,12 @@ def groups(request):
         print(group.groupName)
     page_data = { "groups": groups, "groupnames": groupnames, "members": members }
     return render(request, 'groups.html', page_data)
+
+@login_required(login_url='/login/')
+def account_settings(request):
+
+    return render(request, 'account_settings.html')
+
 
 @login_required(login_url='/login/')
 def add_groups(request):
@@ -62,10 +76,14 @@ def add_transaction(request):
             f_description = form.cleaned_data['description']
             f_amount = form.cleaned_data['amount']
             f_paid_by = form.cleaned_data['paid_by']
-            f_owed_by = form.cleaned_data['owed_by']
+            f_owed_by = form.cleaned_data['owed_by'] | User.objects.filter(id=request.user.id)
+            temp_owed_by = request.POST.get("owed_by")
 
             transaction = Transactions.objects.create(groupID = f_groupID, description = f_description, amount = f_amount, paid_by = f_paid_by)
             transaction.owed_by.set(f_owed_by)
+            print(temp_owed_by)
+            print(f_paid_by)
+            print(f_owed_by)
             transaction.save()
 
             return redirect('/')

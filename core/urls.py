@@ -14,4 +14,5 @@ urlpatterns = [
     path('friends/', views.friends_list),
     path('groups/<int:id>', views.grouppage),
     path('groups/<int:id>/add', views.add_grouptransaction),
+    path('account_settings/', views.account_settings),
 ]
