@@ -11,5 +11,7 @@ urlpatterns = [
     path('groups/', views.groups),
     path('groups/add', views.add_groups),
     path('add_friend/', views.add_friend),
-    path('friends/', views.friends_list)
+    path('friends/', views.friends_list),
+    path('groups/<int:id>', views.grouppage),
+    path('groups/<int:id>/add', views.add_grouptransaction),
 ]
