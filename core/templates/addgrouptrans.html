@@ -1,5 +1,17 @@
 {% include "header.html" %}
 <h1>{{group.groupName}}</h1>
-<div class="col-12">
-    
-  </div>
+<div class="container">
+  <h1>Transaction</h1>
+
+  <form method="POST">
+      {% csrf_token %}
+      <table>
+          {{ transaction_form.as_table }}
+          <tr>
+              <td>
+                  <input type="submit" class="btn btn-primary" value="Add Transaction" />
+              </td>
+          </tr>
+      </table>
+  </form>
+</div>

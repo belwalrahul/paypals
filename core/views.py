@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from core.forms import LoginForm, RegistrationForm, NewGroup, AddFriendForm, TransactionForm
+from core.forms import LoginForm, RegistrationForm, NewGroup, AddFriendForm, TransactionForm, GroupTransactionForm
 from core.models import Friend, Transactions, Group
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -72,18 +72,14 @@ def add_transaction(request):
     if request.method == 'POST':
         form = TransactionForm(request.POST)
         if form.is_valid():
-            f_groupID = form.cleaned_data['groupID']
             f_description = form.cleaned_data['description']
             f_amount = form.cleaned_data['amount']
             f_paid_by = form.cleaned_data['paid_by']
             f_owed_by = form.cleaned_data['owed_by'] | User.objects.filter(id=request.user.id)
-            temp_owed_by = request.POST.get("owed_by")
-
-            transaction = Transactions.objects.create(groupID = f_groupID, description = f_description, amount = f_amount, paid_by = f_paid_by)
+            
+            transaction = Transactions.objects.create(groupID = 0, description = f_description, amount = f_amount, paid_by = f_paid_by)
             transaction.owed_by.set(f_owed_by)
-            print(temp_owed_by)
-            print(f_paid_by)
-            print(f_owed_by)
+            
             transaction.save()
 
             return redirect('/')
@@ -202,15 +198,40 @@ def callUserLogOutFn(request):
 @login_required(login_url='/login/')
 def grouppage(request,id):
     group = Group.objects.get(groupID=id)
-    page_data = { "group": group  }
+    page_data = {}
+    transaction_data = {}
+    try:
+        transactions = Transactions.objects.filter(groupID = id)
+        for transaction in transactions:
+            transaction_data[transaction] = transaction.owed_by.all()
+        # print("----------------> " + transactions + " <----------------")a
+        page_data = {"group": group, "transactions": transaction_data}
+    except Transactions.DoesNotExist:
+        page_data = {"group": group}
     return render(request, 'grouppage.html',page_data)
 
 @login_required(login_url='/login/')
 def add_grouptransaction(request,id):
     group = Group.objects.get(groupID=id)
+    userList = group.userList.all()
+    print(userList)
     page_data = { "group": group  }
     if request.method == 'POST':
-        print("inside post")
+        form = GroupTransactionForm(request.POST,owed_by=userList)
+        if form.is_valid():
+            f_description = form.cleaned_data['description']
+            f_amount = form.cleaned_data['amount']
+            f_paid_by = form.cleaned_data['paid_by']
+            f_owed_by = form.cleaned_data['owed_by'] | User.objects.filter(id=request.user.id)
+            
+            transaction = Transactions.objects.create(groupID = id, description = f_description, amount = f_amount, paid_by = f_paid_by)
+            transaction.owed_by.set(f_owed_by)
+            
+            transaction.save()
+            rdr = "/groups/"+str(id)+"/add"
+            return redirect(rdr)
     else:
+        transaction_form = GroupTransactionForm(owed_by=userList)
+        page_data = { "transaction_form": transaction_form }
         return render(request, 'addgrouptrans.html',page_data)
     
