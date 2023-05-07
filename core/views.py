@@ -24,6 +24,12 @@ def groups(request):
     return render(request, 'groups.html')
 
 @login_required(login_url='/login/')
+def account_settings(request):
+
+    return render(request, 'account_settings.html')
+
+
+@login_required(login_url='/login/')
 def add_groups(request):
     Groupform = NewGroup(request.user)
     return render(request, 'addgroups.html',{ "Groupform": Groupform})
