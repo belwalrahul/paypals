@@ -45,4 +45,10 @@ class GroupTransactionForm(forms.ModelForm):
     class Meta:
         model = Transactions
         fields = ('description', 'amount', 'paid_by', 'owed_by')
+    def __init__(self, *args, **kwargs):
+        grouplist = kwargs.pop('owed_by')
+        super().__init__(*args, **kwargs)
+        self.fields['owed_by'].queryset = User.objects.filter(
+            Q(id__in=[friend.id for friend in grouplist])
+        )
 
