@@ -9,7 +9,15 @@ from django.contrib.auth.models import User
 
 @login_required(login_url='/login/')
 def home(request):
-    return render(request, 'home.html')
+    page_data = {}
+    try:
+        transactions = Transactions.objects.filter(paid_by = request.user)
+        # print("----------------> " + transactions + " <----------------")a
+        page_data = { "transactions": transactions }
+    except Transactions.DoesNotExist:
+        page_data = {}
+
+    return render(request, 'home.html', page_data)
 
 @login_required(login_url='/login/')
 def groups(request):
