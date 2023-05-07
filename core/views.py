@@ -198,3 +198,19 @@ def callUserLogOutFn(request):
     logout(request)
     # Return to homepage.
     return redirect("/")
+
+@login_required(login_url='/login/')
+def grouppage(request,id):
+    group = Group.objects.get(groupID=id)
+    page_data = { "group": group  }
+    return render(request, 'grouppage.html',page_data)
+
+@login_required(login_url='/login/')
+def add_grouptransaction(request,id):
+    group = Group.objects.get(groupID=id)
+    page_data = { "group": group  }
+    if request.method == 'POST':
+        print("inside post")
+    else:
+        return render(request, 'addgrouptrans.html',page_data)
+    

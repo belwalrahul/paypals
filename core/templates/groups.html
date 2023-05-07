@@ -8,19 +8,30 @@
       <div class="container">
         <div class="row justify-content-center">
           <h1>Groups</h1>
+          <div class="col-12">
+           
+            <table class="table table-bordered table-hover">
+              
+              <thead>
+                <tr>
+                  <th><div class="px-2 py-1">name</div></th>
+                  <th><div class="px-2 py-1">Members</div></th>
+                  <th><div class="px-2 py-1">edit</div></th>
+                </tr>
+              </thead>
+              <tbody> 
           {% for group in groups %}
-          <table>
+
             <tr>
-              <td>{{ group.name }}</td>
+              <td><a href="/groups/{{group.groupID}}">{{ group.groupName }}</a></td>
               <td>
-                {% for user in group.users.all %}
+                {% for user in group.userList.all %}
                   {{ user.username }}
                 {% endfor %}
               </td>
-              <td><button onclick="location.href='#'" type="button" class="btn btn-primary">Edit</button></td>
-              <td><button onclick="location.href='#'" type="button" class="btn btn-primary">Delete</button></td>
+              <td><button onclick="location.href='#'" type="button" class="btn btn-primary">Edit</button>
+              <button onclick="location.href='#'" type="button" class="btn btn-primary">Delete</button></td>
             </tr>
-          </table>
           {% endfor %}
           <div class="col-12">
             <button onclick="location.href='/groups/add'" type="button" class="btn btn-primary">Add group</button>

@@ -36,6 +36,8 @@ class AddFriendForm(forms.Form):
     email = forms.EmailField()
 
 class TransactionForm(forms.ModelForm):
+    owed_by = forms.ModelMultipleChoiceField(queryset=User.objects.none(), widget=forms.CheckboxSelectMultiple)
     class Meta:
         model = Transactions
-        fields = ('groupID', 'description', 'amount', 'paid_by', 'owed_by')
+        fields = ('description', 'amount', 'paid_by', 'owed_by')
+
