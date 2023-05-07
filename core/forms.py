@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models import Q
 from core.models import Friend,Group, Transactions
 from django.contrib.auth.models import User
 
@@ -18,12 +19,18 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput())
 
 
-class NewGroup(forms.Form):
-    def __init__(self, user, *args, **kwargs):
-        super(NewGroup, self).__init__(*args, **kwargs)
-        self.fields['userList'].queryset = Friend.objects.filter(user = user).values('friends').distinct()
-    groupName = forms.CharField()
-    userList = forms.ModelMultipleChoiceField(queryset=User.objects.all(),widget=forms.CheckboxSelectMultiple)
+class NewGroup(forms.ModelForm):
+    userList = forms.ModelMultipleChoiceField(queryset=User.objects.none(),
+        widget=forms.CheckboxSelectMultiple,)
+    class Meta:
+        model = Group
+        fields = ['groupName', 'userList']
+    def __init__(self, *args, **kwargs):
+        friends_list = kwargs.pop('userList')
+        super().__init__(*args, **kwargs)
+        self.fields['userList'].queryset = User.objects.filter(
+            Q(id__in=[friend.id for friend in friends_list])
+        )
 
 class AddFriendForm(forms.Form):
     email = forms.EmailField()
