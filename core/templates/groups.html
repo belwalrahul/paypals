@@ -1,9 +1,4 @@
-<html> 
-  <head> 
-    <meta charset="utf-8">
-    <title>HTML Organizer</title>
-  </head>   
-    <body> 
+
         {% include "header.html" %}
       <div class="container">
         <div class="row justify-content-center">
@@ -11,33 +6,35 @@
           <div class="col-12">
            
             <table class="table table-bordered table-hover">
-              
               <thead>
                 <tr>
-                  <th><div class="px-2 py-1">Name</div></th>
-                  <th><div class="px-2 py-1">Members</div></th>
-                  <th><div class="px-2 py-1">Edit</div></th>
+                  <th scope="col"><div class="px-2 py-1">Name</div></th>
+                  <th scope="col"><div class="px-2 py-1">Members</div></th>
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody> 
-          {% for group in groups %}
+                {% for group in groups %}
+                <tr>
+                  <td scope="row"><div class="p-2"><a href="/groups/{{group.groupID}}">{{ group.groupName }}</div></a></td>
+                  <td>
+                    <div class="p-2 row">
+                    {% for user in group.userList.all %}
+                    <div class="px-2">{{ user.username }}</div>
+                    {% endfor %}
+                    </div>
+                  </td>
+                  </div>
+                  <td>
 
-            <tr>
-              <td><a href="/groups/{{group.groupID}}">{{ group.groupName }}</a></td>
-              <td>
-                {% for user in group.userList.all %}
-                  {{ user.username }}
-                {% endfor %}
-              </td>
-              <td><button onclick="location.href='#'" type="button" class="btn btn-primary">Edit</button>
-              <button onclick="location.href='#'" type="button" class="btn btn-primary">Delete</button></td>
-            </tr>
-          {% endfor %}
-          <div class="col-12">
-            <button onclick="location.href='/groups/add'" type="button" class="btn btn-primary">Add group</button>
+                    <div><a class="btn btn-primary" href="/groups/{{group.groupID}}/add">Add transaction</a>
+                   <a class="btn btn-danger" href="#">Delete</a></div>
+                  </td>
+                  {% endfor %}
+
+                </tbody>
+              </table>
+              <button onclick="location.href='/groups/add'" type="button" class="btn btn-primary">Add group</button>
+            </div>
           </div>
-        </div>
-      </div>
-      
-    </body> 
-</html> 
+        </div>    

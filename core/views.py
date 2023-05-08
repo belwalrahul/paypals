@@ -47,8 +47,6 @@ def groups(request):
     groups = Group.objects.filter(userList = request.user.id)
     groupnames = [group.groupName for group in groups]
     members = [group.userList.all() for group in groups]
-    for group in groups:
-        print(group.groupName)
     page_data = { "groups": groups, "groupnames": groupnames, "members": members }
     return render(request, 'groups.html', page_data)
 
