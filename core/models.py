@@ -17,3 +17,4 @@ class Transactions(models.Model):
     amount = models.DecimalField(decimal_places=2,max_digits=15)
     paid_by = models.ForeignKey(User,on_delete=models.CASCADE)
     owed_by = models.ManyToManyField(User,related_name='owed_by')
+    settled = models.BooleanField(default=False)
