@@ -1,7 +1,15 @@
 {% include "header.html" %}
-<h1>Add Friend</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Add Friend</button>
-</form>
+<div class="container">
+    <div class="row justify-content-center">
+        <h1>Add Friend</h1>
+    </div>
+    <div class="row justify-content-center">
+        <form method="post">
+            {% csrf_token %}
+            {{form.email}}
+        </div>
+        <div class="row justify-content-center">
+            <button type="submit" class="btn btn-primary">Add Friend</button>
+        </div>
+    </form>
+</div>

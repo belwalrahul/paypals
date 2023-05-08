@@ -33,7 +33,8 @@ class NewGroup(forms.ModelForm):
         )
 
 class AddFriendForm(forms.Form):
-    email = forms.EmailField()
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email Address'}))
+
 
 class TransactionForm(forms.ModelForm):
     class Meta:
