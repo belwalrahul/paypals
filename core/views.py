@@ -85,7 +85,7 @@ def add_transaction(request):
         if form.is_valid():
             f_description = form.cleaned_data['description']
             f_amount = form.cleaned_data['amount']
-            f_paid_by = form.cleaned_data['paid_by']
+            f_paid_by = form.cleaned_data['paid_by'] 
             f_owed_by = form.cleaned_data['owed_by'] | User.objects.filter(id=request.user.id)
             
             transaction = Transactions.objects.create(groupID = 0, description = f_description, amount = f_amount, paid_by = f_paid_by)

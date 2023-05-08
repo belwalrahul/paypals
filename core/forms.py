@@ -52,4 +52,7 @@ class GroupTransactionForm(forms.ModelForm):
         self.fields['owed_by'].queryset = User.objects.filter(
             Q(id__in=[friend.id for friend in grouplist])
         )
+        self.fields['paid_by'].queryset = User.objects.filter(
+            Q(id__in=[friend.id for friend in grouplist])
+        )
 
