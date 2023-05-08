@@ -2,12 +2,11 @@
 <div class="container">
   <div class="row justify-content-center">
     <h1>{{group.groupName}}</h1>
-
-    <div class="col-12">
-      <button onclick="location.href='/groups/{{group.groupID}}/add'" type="button" class="btn btn-primary">Add group
-        transaction</button>
+  </div>
+    <div class="row justify-content-center">
+        <button onclick="location.href='/groups/{{group.groupID}}/add'" type="button" class="btn btn-primary">Add Group Transaction</button>
     </div>
-    <br><br>
+    <br>
     <div class="col-12">
 
       <table class="table table-bordered table-hover">
@@ -51,21 +50,20 @@
         </tbody>
       </table>
     </div>
-  </div>
 </div>
-        
+
 <ul>
-    {%for user,amount in owed.items%}
-    <li>You owe {{amount}} to {{user}}</li>
-    {% empty %}
-    <li>You don't owe anyone anything</li>
-    {% endfor %}
-    {%for user,amount in borrowed.items%}
-    <li>{{user}} owes you {{amount}}</li>
-    {% empty %}
-    <li>You don't owe anyone anything</li>
-    {% endfor %}
-    {%for user,amount in neutral.items%}
-    <li>Everything settled with {{user}}</li>
-    {% endfor %}
-  </ul>
+  {%for user,amount in owed.items%}
+  <li>You owe {{amount}} to {{user}}</li>
+  {% empty %}
+  <li>You don't owe anyone anything</li>
+  {% endfor %}
+  {%for user,amount in borrowed.items%}
+  <li>{{user}} owes you {{amount}}</li>
+  {% empty %}
+  <li>You don't owe anyone anything</li>
+  {% endfor %}
+  {%for user,amount in neutral.items%}
+  <li>Everything settled with {{user}}</li>
+  {% endfor %}
+</ul>

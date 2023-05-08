@@ -112,7 +112,6 @@ def remove_friend(request, friend_id):
         friend_obj = Friend.objects.get(user=request.user)
         if friend in friend_obj.friends.all():
             friend_obj.friends.remove(friend)
-            # Remove the current user from the friend's friends list
             friend_obj, created = Friend.objects.get_or_create(user=friend)
             friend_obj.friends.remove(request.user)
             messages.success(request, f'{friend.username} has been removed from your friends list.')
@@ -147,12 +146,9 @@ def add_friend(request):
                 return render(request, 'add_friend.html', {'form': form, 'error': 'User with this email does not exist.'})
             # friend_obj = Friend.objects.get(user=request.user)
             friend_obj = Friend.objects.get_or_create(user=request.user)
-        # Add the friend to the current user's friends list
             if friend:
                 friend_obj, created = Friend.objects.get_or_create(user=request.user)
                 friend_obj.friends.add(friend)
-
-            # Add the current user to the friend's friends list
                 friend_obj, created = Friend.objects.get_or_create(user=friend)
                 friend_obj.friends.add(request.user)
 
