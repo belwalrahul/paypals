@@ -33,17 +33,6 @@
 
 <hr />
 
-<table>
-    <tbody>
-        {% for user in users %}
-          <tr>
-            <td>{{ user.first_name }}</td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td colspan="3">No user found.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-</table>
+<h3>You are Owed: {{ owed }}</h3>
+<h3>You Owe: {{ owe }}</h3>
   

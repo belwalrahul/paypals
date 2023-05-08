@@ -9,17 +9,28 @@ from django.contrib.auth.models import User
 
 @login_required(login_url='/login/')
 def home(request):
-    trans_obj = Transactions.objects.filter(paid_by=request.user)
-    # print(friend_obj.friends)
-    trans_owed_by = trans_obj
     page_data = {}
     transaction_data = {}
+    total_paid = 0
+    total_owed = 0
     try:
-        transactions = Transactions.objects.filter(paid_by = request.user)
+        transactions = Transactions.objects.filter(owed_by = request.user)
+        transactions_paid = Transactions.objects.filter(paid_by = request.user)
+        
+        for paid in transactions_paid:
+            noOfPeople = paid.owed_by.count()
+            total_paid += ((paid.amount / noOfPeople) * (noOfPeople-1))
+        for owed in transactions:
+            if owed.paid_by != request.user:
+                noOfPeople = owed.owed_by.count()
+                total_owed += (owed.amount / noOfPeople)
+
+        print("Owed: " + str(total_paid))
+        print("Owe: " + str(total_owed))
         for transaction in transactions:
             transaction_data[transaction] = transaction.owed_by.all()
         # print("----------------> " + transactions + " <----------------")a
-        page_data = { "transactions": transaction_data}
+        page_data = { "transactions": transaction_data, "owed": total_paid, "owe": total_owed }
     except Transactions.DoesNotExist:
         page_data = {}
 
@@ -126,7 +137,7 @@ def add_friend(request):
                 friend_obj, created = Friend.objects.get_or_create(user=friend)
                 friend_obj.friends.add(request.user)
 
-                return redirect('home.html')
+                return redirect('/')
             else:
                 return render(request, 'add_friend.html', {'form': form})
     else:
