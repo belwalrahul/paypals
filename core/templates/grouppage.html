@@ -33,4 +33,20 @@
             </tr>
         {% endfor %}
     </tbody>
+   
 </table>
+<ul>
+    {%for user,amount in owed.items%}
+    <li>You owe {{amount}} to {{user}}</li>
+    {% empty %}
+    <li>You don't owe anyone anything</li>
+    {% endfor %}
+    {%for user,amount in borrowed.items%}
+    <li>{{user}} owes you {{amount}}</li>
+    {% empty %}
+    <li>You don't owe anyone anything</li>
+    {% endfor %}
+    {%for user,amount in neutral.items%}
+    <li>Everything settled with {{user}}</li>
+    {% endfor %}
+  </ul>

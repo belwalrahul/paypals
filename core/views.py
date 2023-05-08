@@ -198,14 +198,43 @@ def callUserLogOutFn(request):
 @login_required(login_url='/login/')
 def grouppage(request,id):
     group = Group.objects.get(groupID=id)
+    userList = group.userList.all()
+    values = {}
+   
+    for user in userList:
+        if user != request.user:
+            values[user.username] = 0 
+    
     page_data = {}
     transaction_data = {}
     try:
         transactions = Transactions.objects.filter(groupID = id)
+        
         for transaction in transactions:
             transaction_data[transaction] = transaction.owed_by.all()
-        # print("----------------> " + transactions + " <----------------")a
-        page_data = {"group": group, "transactions": transaction_data}
+            if(transaction.paid_by == request.user):
+                for user in transaction.owed_by.values():
+                    if(user["username"] != str(request.user)):
+                        values[user["username"]] += transaction.amount / transaction.owed_by.count()
+            else:
+                for user in transaction.owed_by.values():
+                    if(user["username"] == str(request.user)):
+                        values[str(transaction.paid_by)] -= transaction.amount / transaction.owed_by.count()
+        print(values)
+        owed = {}
+        borrowed = {}
+        neutral = {}
+        for user in userList:
+            if(user.username != str(request.user)):
+                if values[user.username] > 0:
+                    owed[user.username] = values[user.username]
+                elif values[user.username] < 0:
+                    borrow = abs(values[user.username])
+                    borrowed[user.username] = borrow
+                else:
+                    neutral[user.username] = values[user.username]
+        
+        page_data = {"group": group, "transactions": transaction_data,"owed":owed,"borrowed":borrowed,"neutral":neutral}
     except Transactions.DoesNotExist:
         page_data = {"group": group}
     return render(request, 'grouppage.html',page_data)
