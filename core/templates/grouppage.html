@@ -1,36 +1,55 @@
 {% include "header.html" %}
-<h1>{{group.groupName}}</h1>
-<div class="col-12">
-    <button onclick="location.href='/groups/{{group.groupID}}/add'" type="button" class="btn btn-primary">Add group transaction</button>
-  </div>
+<div class="container">
+  <div class="row justify-content-center">
+    <h1>{{group.groupName}}</h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Group</th>
-        <th>Description</th>
-        <th>Amount</th>
-        <th>Paid By</th>
-        <th>Owed By</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for transaction, owed_by in transactions.items %}
-            <tr>
+    <div class="col-12">
+      <button onclick="location.href='/groups/{{group.groupID}}/add'" type="button" class="btn btn-primary">Add group
+        transaction</button>
+    </div>
+    <br><br>
+    <div class="col-12">
+
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>
+              <div class="px-2 py-1">Group</div>
+            </th>
+            <th>
+              <div class="px-2 py-1">Description</div>
+            </th>
+            <th>
+              <div class="px-2 py-1">Amount</div>
+            </th>
+            <th>
+              <div class="px-2 py-1">Paid By</div>
+            </th>
+            <th>
+              <div class="px-2 py-1">Owed By</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for transaction, owed_by in transactions.items %}
+          <tr>
             <td>{{ transaction.groupID }}</td>
             <td>{{ transaction.description }}</td>
             <td>{{ transaction.amount }}</td>
             <td>{{ transaction.paid_by }}</td>
             <td>
-                {% for owed in owed_by %}
-                    {{ owed.first_name }},&nbsp;
-                {% endfor %}
+              {% for owed in owed_by %}
+              {{ owed.first_name }},&nbsp;
+              {% endfor %}
             </td>
-            </tr>
-        {% empty %}
-            <tr>
+          </tr>
+          {% empty %}
+          <tr>
             <td colspan="3">No transactions found.</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
