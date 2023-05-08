@@ -5,21 +5,34 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.contrib import messages
+
 # Create your views here.
 
 @login_required(login_url='/login/')
 def home(request):
-    trans_obj = Transactions.objects.filter(paid_by=request.user)
-    # print(friend_obj.friends)
-    trans_owed_by = trans_obj
     page_data = {}
     transaction_data = {}
+    total_paid = 0
+    total_owed = 0
     try:
-        transactions = Transactions.objects.filter(paid_by = request.user)
+        transactions = Transactions.objects.filter(owed_by = request.user)
+        transactions_paid = Transactions.objects.filter(paid_by = request.user)
+        
+        for paid in transactions_paid:
+            noOfPeople = paid.owed_by.count()
+            total_paid += ((paid.amount / noOfPeople) * (noOfPeople-1))
+        for owed in transactions:
+            if owed.paid_by != request.user:
+                noOfPeople = owed.owed_by.count()
+                total_owed += (owed.amount / noOfPeople)
+
+        print("Owed: " + str(total_paid))
+        print("Owe: " + str(total_owed))
         for transaction in transactions:
             transaction_data[transaction] = transaction.owed_by.all()
         # print("----------------> " + transactions + " <----------------")a
-        page_data = { "transactions": transaction_data}
+        page_data = { "transactions": transaction_data, "owed": total_paid, "owe": total_owed }
     except Transactions.DoesNotExist:
         page_data = {}
 
@@ -95,6 +108,25 @@ def about(request):
     return render(request, 'about.html')
 
 @login_required(login_url='/login/')
+def remove_friend(request, friend_id):
+    try:
+        friend = User.objects.get(id=friend_id)
+        friend_obj = Friend.objects.get(user=request.user)
+        if friend in friend_obj.friends.all():
+            friend_obj.friends.remove(friend)
+            # Remove the current user from the friend's friends list
+            friend_obj, created = Friend.objects.get_or_create(user=friend)
+            friend_obj.friends.remove(request.user)
+            messages.success(request, f'{friend.username} has been removed from your friends list.')
+        else:
+            messages.error(request, f'{friend.username} is not in your friends list.')
+    except User.DoesNotExist:
+        messages.error(request, 'User does not exist.')
+    except Friend.DoesNotExist:
+        messages.error(request, 'You do not have any friends yet.')
+    return redirect('/friends/')
+
+@login_required(login_url='/login/')
 def friends_list(request):
     try:
         friend_obj = Friend.objects.get(user=request.user)
@@ -126,7 +158,7 @@ def add_friend(request):
                 friend_obj, created = Friend.objects.get_or_create(user=friend)
                 friend_obj.friends.add(request.user)
 
-                return redirect('home.html')
+                return redirect('/friends/')
             else:
                 return render(request, 'add_friend.html', {'form': form})
     else:
