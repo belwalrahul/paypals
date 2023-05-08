@@ -7,9 +7,12 @@
             <tr>
                 <td>{{ friend.username }}</td>
                 <td class="text-right">
-                    <button class="button btn-primary">
-                        Remove Friend
-                    </button>
+                    <form action="{% url 'remove_friend' friend.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="button btn-danger">
+                            Remove Friend
+                        </button>
+                    </form>
                 </td>
                 {% empty %}
                 <td>No friends yet.</td>
