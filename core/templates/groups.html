@@ -1,39 +1,44 @@
+{% include "header.html" %}
+<div class="container">
+  <div class="row justify-content-center">
+    <h1>Groups</h1>
+    <div class="col-12">
 
-        {% include "header.html" %}
-      <div class="container">
-        <div class="row justify-content-center">
-          <h1>Groups</h1>
-          <div class="col-12">
-           
-            <table class="table table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th scope="col"><div class="px-2 py-1">Name</div></th>
-                  <th scope="col"><div class="px-2 py-1">Members</div></th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              <tbody> 
-                {% for group in groups %}
-                <tr>
-                  <td scope="row"><div class="p-2"><a href="/groups/{{group.groupID}}">{{ group.groupName }}</div></a></td>
-                  <td>
-                    <div class="p-2 row">
-                    {% for user in group.userList.all %}
-                    <div class="px-2">{{ user.username }}</div>
-                    {% endfor %}
-                    </div>
-                  </td>
-                  </div>
-                  <td class="text-right">
-                    <div><a class="btn btn-primary" href="/groups/{{group.groupID}}/add">Add transaction</a>
-                   <a class="btn btn-danger" href="#">Delete</a></div>
-                  </td>
-                  {% endfor %}
-
-                </tbody>
-              </table>
-              <button onclick="location.href='/groups/add'" type="button" class="btn btn-primary">Add group</button>
-            </div>
-          </div>
-        </div>    
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="col">
+              <div class="px-2 py-1">Name</div>
+            </th>
+            <th scope="col">
+              <div class="px-2 py-1">Members</div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for group in groups %}
+          <tr>
+            <td scope="row">
+              <div class="p-2"><a href="/groups/{{group.groupID}}">{{ group.groupName }}</div></a>
+            </td>
+            <td>
+              <div class="p-2 row">
+                {% for user in group.userList.all %}
+                <div class="px-2">{{ user.username }}</div>
+                {% endfor %}
+              </div>
+            </td>
+    </div>
+    <td class="text-right">
+      <div><a class="btn btn-primary" href="/groups/{{group.groupID}}/add">Add transaction</a>
+        <a class="btn btn-danger" href="#">Delete</a>
+      </div>
+    </td>
+    {% endfor %}
+    </tbody>
+    </table>
+    <button onclick="location.href='/groups/add'" type="button" class="btn btn-primary">Add group</button>
+  </div>
+</div>
+</div>

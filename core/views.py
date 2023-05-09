@@ -25,8 +25,10 @@ def home(request):
         for owed in transactions:
             if owed.paid_by != request.user:
                 noOfPeople = owed.owed_by.count()
-                total_owed += (owed.amount / noOfPeople)
-
+                if owed.paid_by != request.user:
+                    total_owed += (owed.amount / noOfPeople)
+                else:
+                    total_owed -= (owed.amount / noOfPeople)
         print("Owed: " + str(total_paid))
         print("Owe: " + str(total_owed))
         for transaction in transactions:
@@ -77,6 +79,23 @@ def add_groups(request):
         Groupform = NewGroup(userList=userList)
         page_data = { "Groupform": Groupform  }
         return render(request, 'addgroups.html',page_data)
+
+
+@login_required(login_url='/login/')
+def delete_transaction(request, pk):
+    try:
+        transaction = Transactions.objects.get(id=pk)
+        if transaction.paid_by == request.user:
+            transaction.delete()
+            messages.success(request, 'Transaction deleted successfully.')
+        else:
+            # TODO @jait send data to modal/ toast on frontend
+            messages.error(request, 'You are not authorized to delete this transaction.')
+    except Transactions.DoesNotExist:
+        # lets just keep this on the backend
+        messages.error(request, 'Transaction does not exist.')
+    return redirect('/')
+
 
 @login_required(login_url='/login/')
 def add_transaction(request):
@@ -238,14 +257,16 @@ def grouppage(request,id):
         
         for transaction in transactions:
             transaction_data[transaction] = transaction.owed_by.all()
-            if(transaction.paid_by == request.user):
+            amount_per_person = transaction.amount / transaction.owed_by.count()
+            if transaction.paid_by == request.user:
                 for user in transaction.owed_by.values():
-                    if(user["username"] != str(request.user)):
-                        values[user["username"]] += transaction.amount / transaction.owed_by.count()
+                    if user['username'] != str(request.user):
+                        values[user['username']] -= amount_per_person
             else:
                 for user in transaction.owed_by.values():
-                    if(user["username"] == str(request.user)):
-                        values[str(transaction.paid_by)] -= transaction.amount / transaction.owed_by.count()
+                    if user['username'] == str(request.user):
+                        values[str(transaction.paid_by)] += amount_per_person
+
         print(values)
         owed = {}
         borrowed = {}

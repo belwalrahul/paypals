@@ -16,7 +16,7 @@
       <tbody>
         {% for transaction, owed_by in transactions.items %}
         <tr>
-          <td>{{ transaction.groupID }}</td>
+          <td>{% if transaction.groupID == 0 %}Individual Transaction{% else %}{{ transaction.groupID }}{% endif %}</td>
           <td>{{ transaction.description }}</td>
           <td>{{ transaction.amount }}</td>
           <td>{{ transaction.paid_by }}</td>
@@ -24,6 +24,9 @@
             {% for owed in owed_by %}
             {{ owed.first_name }},&nbsp;
             {% endfor %}
+          </td>
+          <td>
+            <a href="{% url 'delete_transaction' transaction.id %}">Delete</a>
           </td>
         </tr>
         {% empty %}

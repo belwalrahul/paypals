@@ -41,6 +41,9 @@
               {{ owed.first_name }},&nbsp;
               {% endfor %}
             </td>
+            <td>
+              <a href="{% url 'delete_transaction' transaction.id %}">Delete</a>
+            </td>
           </tr>
           {% empty %}
           <tr>
@@ -54,16 +57,22 @@
 
 <ul>
   {%for user,amount in owed.items%}
-  <li>You owe {{amount}} to {{user}}</li>
+    {% if amount > 0 %}
+      <li>You owe {{amount}} to {{user}}</li>
+    {% endif %}
   {% empty %}
-  <li>You don't owe anyone anything</li>
+    <li>You don't owe anyone anything</li>
   {% endfor %}
   {%for user,amount in borrowed.items%}
-  <li>{{user}} owes you {{amount}}</li>
+    {% if amount > 0 %}
+      <li>{{user}} owes you {{amount}}</li>
+    {% endif %}
   {% empty %}
-  <li>You don't owe anyone anything</li>
+    <li>Nobody owes you anything</li>
   {% endfor %}
   {%for user,amount in neutral.items%}
-  <li>Everything settled with {{user}}</li>
+    {% if amount == 0 %}
+      <li>Everything settled with {{user}}</li>
+    {% endif %}
   {% endfor %}
 </ul>
