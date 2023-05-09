@@ -318,7 +318,7 @@ def add_grouptransaction(request,id):
             
             transaction.save()
             rdr = "/groups/"+str(id)+"/add"
-            return redirect(rdr)
+            return redirect(grouppage,id=id)
     else:
         transaction_form = GroupTransactionForm(owed_by=userList)
         page_data = { "transaction_form": transaction_form }

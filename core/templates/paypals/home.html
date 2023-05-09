@@ -1,8 +1,30 @@
 {% include "paypals/header.html" %}
+<div class="container mt-5">
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <div class="row">
+        <div class="col-sm mb-3">
+          <div class="text-success">
+            <h4>Owed to You</h4>
+            <p class="mb-0">${{ owed |floatformat:2}}</p>
+          </div>
+        </div>
+        <div class="col-sm mb-3">
+          <div class="text-danger">
+            <h4>You Owe</h4>
+            <p class="mb-0">${{ owe |floatformat:2}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-6 py-4">
+      {% include "paypals/messages.html" %}
       {% if transactions %}
       <table class="table table-bordered table-striped custom-table">
         <thead>
