@@ -1,11 +1,11 @@
 {% include "paypals/header.html" %}
 <div class="container">
     <div class="row justify-content-center">
-        <h1>Friends List for {{user.username}}</h1>
+        <h1>Friends List for {{ user.first_name }}&nbsp;{{ user.last_name }}</h1>
         <table class="table table-hover">
             {% for friend in friends %}
             <tr>
-                <td>{{ friend.username }}</td>
+                <td>{{ friend.first_name }}&nbsp;{{ friend.last_name }}</td>
                 <td class="text-right">
                     <form action="{% url 'remove_friend' friend.id %}" method="post">
                         {% csrf_token %}
