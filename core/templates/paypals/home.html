@@ -40,13 +40,14 @@
         <tbody>
           {% for transaction, owed_by in transactions.items %}
           <tr>
-            <td>{% if transaction.groupID == 0 %}Individual Transaction{% else %}{{ transaction.groupID }}{% endif %}</td>
+            <td>{{ owed_by.1 }}</td>
+            <!-- <td>{% if transaction.groupID == 0 %}Individual Transaction{% else %}{{ transaction.groupID }}{% endif %}</td> -->
             <td>{{ transaction.description }}</td>
             <td>{{ transaction.amount }}</td>
             <td>{{ transaction.paid_by.first_name }}</td>
             <td >
               <div class="users-owed-btn" data-owed="{% for owed in owed_by %}{{ owed.first_name }},{% endfor %}">
-                {{ owed_by.0.first_name}} 
+                {{ owed_by.0.0.first_name}} 
                 {% if owed_by|length > 1 %}
                 +{{ owed_by|length|add:"-1" }}
                   <i class="fas fa-users"></i>
