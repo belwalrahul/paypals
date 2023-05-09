@@ -13,12 +13,13 @@ from django.contrib import messages
 def home(request):
     page_data = {}
     transaction_data = {}
+    # group = { 0: "Individual Group" }
     total_paid = 0
     total_owed = 0
     try:
         transactions = Transactions.objects.filter(owed_by = request.user)
         transactions_paid = Transactions.objects.filter(paid_by = request.user)
-        group_name = Group.objects.get
+
         for paid in transactions_paid:
             noOfPeople = paid.owed_by.count()
             total_paid += ((paid.amount / noOfPeople) * (noOfPeople-1))
@@ -32,13 +33,22 @@ def home(request):
         print("Owed: " + str(total_paid))
         print("Owe: " + str(total_owed))
         for transaction in transactions:
-            transaction_data[transaction] = transaction.owed_by.all()
+            print(transaction)
+            group = "Individual Group"
+
+            if transaction.groupID != 0:
+                group_name = Group.objects.get(groupID = transaction.groupID)
+                # group[transaction.groupID] = group_name.groupName
+                group = group_name.groupName
+
+            print(group)
+            transaction_data[transaction] = [ transaction.owed_by.all(), group ]
         # print("----------------> " + transactions + " <----------------")a
-        page_data = { "transactions": transaction_data, "owed": total_paid, "owe": total_owed }
+        page_data = { "transactions": transaction_data, "owed": total_paid, "owe": total_owed, "group": group }
     except Transactions.DoesNotExist:
         page_data = {}
 
-    print(transaction_data)
+    print(page_data)
 
     return render(request, 'paypals/home.html', page_data)
 
@@ -83,10 +93,12 @@ def add_groups(request):
 
 @login_required(login_url='/login/')
 def delete_transaction(request, pk):
+    print(pk)
     try:
         transaction = Transactions.objects.get(id=pk)
         if transaction.paid_by == request.user:
             transaction.delete()
+            print(transaction)
             messages.success(request, 'Transaction deleted successfully.')
         else:
             # TODO @jait send data to modal/ toast on frontend
@@ -105,7 +117,7 @@ def add_transaction(request):
             f_description = form.cleaned_data['description']
             f_amount = form.cleaned_data['amount']
             f_paid_by = form.cleaned_data['paid_by'] 
-            f_owed_by = form.cleaned_data['owed_by'] | friends # add the user's friends to owed_by
+            f_owed_by = form.cleaned_data['owed_by'] | User.objects.filter(id=request.user.id)
             
             transaction = Transactions.objects.create(groupID = 0, description = f_description, amount = f_amount, paid_by = f_paid_by)
             transaction.owed_by.set(f_owed_by)
@@ -115,6 +127,7 @@ def add_transaction(request):
     else:
         transaction_form = TransactionForm()
         transaction_form.fields['owed_by'].queryset = friends # limit the queryset to the user's friends
+        transaction_form.fields['paid_by'].queryset = friends # limit the queryset to the user's friends
         page_data = { "transaction_form": transaction_form }
 
         return render(request, 'add_transaction.html', page_data)
@@ -241,6 +254,8 @@ def callUserLogOutFn(request):
 
 @login_required(login_url='/login/')
 def grouppage(request,id):
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^")
+    print(id)
     group = Group.objects.get(groupID=id)
     userList = group.userList.all()
     values = {}
