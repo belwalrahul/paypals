@@ -3,6 +3,7 @@
 <div class="container">
   <div class="row justify-content-center">
     <h3>Transaction Summary:</h3>
+    {% if transactions %}
     <table class="table table-bordered table-hover">
       <thead>
         <tr>
@@ -36,6 +37,11 @@
         {% endfor %}
       </tbody>
     </table>
+    {% else %}
+    <div class="alert alert-info">
+      <p class="mb-0">No transactions to display.</p>
+    </div>
+  {% endif %}
 
   </div>
 </div>

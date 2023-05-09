@@ -1,0 +1,140 @@
+
+.navbar {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.navbar-nav {
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.navbar-nav .nav-item {
+  color:#000000;
+  margin-left: 1rem;
+}
+
+.nav-link {
+  font-size: 1.2rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.dropdown-menu {
+  background-color: #28efa8;
+  border: none;
+}
+
+.dropdown-item {
+  color: #333;
+  font-weight: 600;
+
+}
+
+.dropdown-item:hover {
+  background-color: #0cb67a;
+}
+
+.navbar-nav:last-child {
+  margin-left: auto;
+}
+
+.custom-table {
+  font-size: 14px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.custom-table thead th {
+  background-color: #17a2b8;
+  color: #fff;
+  border-color: #17a2b8;
+  font-weight: bold;
+  text-align: center;
+}
+
+.custom-table tbody td {
+  border-color: #dee2e6;
+  text-align: center;
+  border-radius: 0;
+}
+
+.custom-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #d3d3d3;
+}
+
+.custom-table tr td:first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+.custom-table tr td:last-child {
+  border-radius: 0 10px 10px 0;
+}
+
+.custom-table button {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+.group-name a{
+  font-weight: bold;
+  font-size: large;
+  color: #0cb67a;
+  text-decoration: none;
+}
+
+.group-name:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.card {
+  margin-top: 50px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  background-color: #10d48e;
+  border-radius: 20px 20px 0 0;
+  color: white;
+}
+
+.form-group label {
+  font-weight: bold;
+  color: #10d48e;
+}
+
+
+.btn-primary {
+  background-color: #10d48e;
+  border-color: #10d48e;
+}
+
+.btn-primary:hover {
+  background-color: #0dbf7e;
+  border-color: #0dbf7e;
+}
+
+.btn-outline-primary {
+  color: #10d48e;
+  border-color: #10d48e;
+  text-decoration: none;
+}
+
+.btn-outline-primary:hover {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #0dbf7e;
+  border-color: #0dbf7e;
+}

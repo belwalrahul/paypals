@@ -1,0 +1,55 @@
+{% include "paypals/header.html" %}
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 py-4">
+      {% if groups %}
+      <table class="table table-hover table-bordered table-striped custom-table">
+        <thead>
+          <tr>
+            <th>Group Name</th>
+            <th>Group Members</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for group in groups %}
+        <tr>
+          <td class="group-name"> 
+            <a href="/groups/{{group.groupID}}">{{ group.groupName }}</a>
+          </td>
+          <td>
+            {% for user in group.userList.all %}
+              {{ user.first_name}} {{ user.last_name}}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+              No members
+            {% endfor %}
+          </td>
+          <td>
+            <div class="d-flex justify-content-end">
+              <a href="/groups/{{group.groupID}}/add">
+                <button class="btn btn-success mr-2">Add Transaction</button>
+              </a>
+              <form method="POST" action=#>
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this group?')">Delete Group</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+  <div class="alert alert-danger">
+    <p class="mb-0">No transactions to display.</p>
+  </div>
+{% endif %}
+<a href="/groups/add">
+  <button type="button" class="btn btn-success" >
+    New Group
+  </button>
+  </a>
+        </div>
+        </div>
+        </div>
+        

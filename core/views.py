@@ -40,7 +40,7 @@ def home(request):
 
     print(transaction_data)
 
-    return render(request, 'home.html', page_data)
+    return render(request, 'paypals/home.html', page_data)
 
 @login_required(login_url='/login/')
 def groups(request):
@@ -50,7 +50,7 @@ def groups(request):
     groupnames = [group.groupName for group in groups]
     members = [group.userList.all() for group in groups]
     page_data = { "groups": groups, "groupnames": groupnames, "members": members }
-    return render(request, 'groups.html', page_data)
+    return render(request, 'paypals/groups.html', page_data)
 
 @login_required(login_url='/login/')
 def account_settings(request):
@@ -193,14 +193,14 @@ def callRegisterUserForm(request):
             return redirect("/")
         else:
             # Form invalid, print errors to console
-            return render(request, 'register.html', { "registerUserform": registerUserform , 'title':'User Registration'})
+            return render(request, 'paypals/register.html', { "registerUserform": registerUserform , 'title':'User Registration'})
     
     else:
         if request.user.is_authenticated:
             return redirect("/")
         else:
             registerUserform = RegistrationForm()
-            return render(request, 'register.html', { "registerUserform": registerUserform , 'title':'User Registration'})
+            return render(request, 'paypals/register.html', { "registerUserform": registerUserform , 'title':'User Registration'})
 
 
 def callUserLoginFn(request):
@@ -228,10 +228,10 @@ def callUserLoginFn(request):
             else:
                 print("Someone tried to login and failed.")
                 print("They used username: {} and password: {}".format(username,password))
-                return render(request, 'login.html', {'login_form': LoginForm, 'title':'User Login', 'title':'Login'})
+                return render(request, 'paypals/login.html', {'login_form': LoginForm, 'title':'User Login', 'title':'Login'})
     else:
         # Nothing has been provided for username or password.
-        return render(request, 'login.html', {'login_form': LoginForm, 'title':'User Login', 'title':'Login'})
+        return render(request, 'paypals/login.html', {'login_form': LoginForm, 'title':'User Login', 'title':'Login'})
 
 @login_required(login_url='/login/')
 def callUserLogOutFn(request):
