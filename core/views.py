@@ -161,7 +161,7 @@ def add_friend(request):
             try:
                 friend = User.objects.get(email=email)
             except User.DoesNotExist:
-                return render(request, 'add_friend.html', {'form': form, 'error': 'User with this email does not exist.'})
+                return render(request, 'paypals/add_friend.html', {'form': form, 'error': 'User with this email does not exist.'})
             # friend_obj = Friend.objects.get(user=request.user)
             friend_obj = Friend.objects.get_or_create(user=request.user)
             if friend:
@@ -172,10 +172,10 @@ def add_friend(request):
 
                 return redirect('/friends/')
             else:
-                return render(request, 'add_friend.html', {'form': form})
+                return render(request, 'paypals/add_friend.html', {'form': form})
     else:
         form = AddFriendForm()
-    return render(request, 'add_friend.html', {'form': form})
+    return render(request, 'paypals/add_friend.html', {'form': form})
 
 
 def callRegisterUserForm(request):
@@ -308,5 +308,5 @@ def add_grouptransaction(request,id):
     else:
         transaction_form = GroupTransactionForm(owed_by=userList)
         page_data = { "transaction_form": transaction_form }
-        return render(request, 'addgrouptrans.html',page_data)
+        return render(request, 'paypals/addgrouptrans.html',page_data)
     

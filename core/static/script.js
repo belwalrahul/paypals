@@ -20,3 +20,11 @@ $(document).ready(function() {
     }).tooltip('show');
   });
 });
+
+$('.custom-checkboxes input[type="checkbox"]').on('change', function() {
+  if ($(this).is(':checked')) {
+      $(this).next('label').addClass('checked');
+  } else {
+      $(this).next('label').removeClass('checked');
+  }
+});

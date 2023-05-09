@@ -17,5 +17,5 @@ urlpatterns = [
     path('account_settings/', views.account_settings),
     path('remove_friend/<int:friend_id>/', views.remove_friend, name='remove_friend'),
     path('delete_transaction/<int:pk>/', views.delete_transaction, name='delete_transaction'),
-
+    path("select2/", include("django_select2.urls")),
 ]

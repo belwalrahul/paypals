@@ -1,0 +1,36 @@
+{% include "paypals/header.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-lg">
+          <div class="card-body">
+            <form method="POST">
+              {% csrf_token %}
+              <div class="form-group">
+                    <label for="id_description" class="mr-2">Description:</label>
+                    {{  transaction_form.description }}
+                  </div>
+                  <div class="form-group">
+                    <label for="id_amount" class="mr-2">Amount:</label>
+                    {{ transaction_form.amount }}
+                  </div>
+                  <div class="form-group">
+                    <label for="id_payer" class="mr-2">Payer:</label>
+                    {{  transaction_form.paid_by }}
+                  </div>
+                  <div class="form-group">
+                    <label for="id_participants" class="mr-2">Participants:</label>
+                    {{  transaction_form.owed_by}}
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-block">Add Transaction</button>
+                </form>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

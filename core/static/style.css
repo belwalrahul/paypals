@@ -166,3 +166,24 @@ p {
   font-size: 2rem;
   font-weight: bold;
 }
+
+.custom-checkboxes input[type="checkbox"] {
+    /* Hide the default checkboxes */
+    display: none;
+}
+
+.custom-checkboxes label {
+    /* Add styles to the labels */
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.custom-checkboxes label.checked {
+  background-color: #007bff;
+  color: #fff;
+}

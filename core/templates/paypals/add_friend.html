@@ -1,0 +1,23 @@
+{% include "paypals/header.html" %}
+    
+    {% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-lg">
+          <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <label for="id_username" class="mr-4">Enter Email:</label>
+                      {{form.email}}
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Add Friend</button>
+                  </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    
+</div>
+{% endblock %}
