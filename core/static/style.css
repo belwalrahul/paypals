@@ -138,3 +138,31 @@
   background-color: #0dbf7e;
   border-color: #0dbf7e;
 }
+
+h3 {
+  font-size: 48px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+@media (max-width: 576px) {
+  h3 {
+    font-size: 36px;
+  }
+}
+
+p {
+  font-size: 1.2rem;
+}
+
+.text-success h4,
+.text-danger h4 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.text-success p,
+.text-danger p {
+  font-size: 2rem;
+  font-weight: bold;
+}

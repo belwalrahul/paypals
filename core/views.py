@@ -150,7 +150,7 @@ def friends_list(request):
     except Friend.DoesNotExist:
         friends = []
 
-    return render(request, 'friends_list.html', {'friends': friends})
+    return render(request, 'paypals/friends_list.html', {'friends': friends})
 
 @login_required(login_url='/login/')
 def add_friend(request):
@@ -304,7 +304,7 @@ def add_grouptransaction(request,id):
             
             transaction.save()
             rdr = "/groups/"+str(id)+"/add"
-            return redirect(rdr)
+            return redirect(grouppage,id=id)
     else:
         transaction_form = GroupTransactionForm(owed_by=userList)
         page_data = { "transaction_form": transaction_form }

@@ -1,29 +1,47 @@
 {% include "paypals/header.html" %}
-<div class="container">
+<div class="container mt-5">
     <div class="row justify-content-center">
-        <h1>Friends List for {{user.username}}</h1>
-        <table class="table table-hover">
-            {% for friend in friends %}
-            <tr>
-                <td>{{ friend.username }}</td>
-                <td class="text-right">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Friends List for {{user.first_name}} {{user.last_name}}</h5>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Username</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for friend in friends %}
+                <tr>
+                  <td>{{ friend.first_name }} {{ friend.last_name }}</td>
+                  <td>{{ friend.username }}</td>
+                  <td class="text-right">
                     <form action="{% url 'remove_friend' friend.id %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="button btn-danger">
+                        <button type="submit" class="btn btn-danger btn-sm">
                             Remove Friend
                         </button>
                     </form>
                 </td>
+                </tr>
                 {% empty %}
-                <td>No friends yet.</td>
-            </tr>
-
-            {% endfor %}
-
-        </table>
-        <a href="/add_friend/">
-            <button type="submit" class="btn btn-primary">Add Friend</button>
-        </a>
-
+                <tr>
+                  <td colspan="3" class="text-center">No friends found.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <a href="/add_friend/">
+                <button type="button" class="btn btn-success" >
+                  Add Friend
+                </button>
+                </a>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+  
