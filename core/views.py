@@ -18,7 +18,7 @@ def home(request):
     try:
         transactions = Transactions.objects.filter(owed_by = request.user)
         transactions_paid = Transactions.objects.filter(paid_by = request.user)
-        
+        group_name = Group.objects.get
         for paid in transactions_paid:
             noOfPeople = paid.owed_by.count()
             total_paid += ((paid.amount / noOfPeople) * (noOfPeople-1))
@@ -96,26 +96,25 @@ def delete_transaction(request, pk):
         messages.error(request, 'Transaction does not exist.')
     return redirect('/')
 
-
 @login_required(login_url='/login/')
 def add_transaction(request):
+    friends = Friend.objects.get(user=request.user).friends.all() # get the user's friends
     if request.method == 'POST':
         form = TransactionForm(request.POST)
         if form.is_valid():
             f_description = form.cleaned_data['description']
             f_amount = form.cleaned_data['amount']
             f_paid_by = form.cleaned_data['paid_by'] 
-            f_owed_by = form.cleaned_data['owed_by'] | User.objects.filter(id=request.user.id)
+            f_owed_by = form.cleaned_data['owed_by'] | friends # add the user's friends to owed_by
             
             transaction = Transactions.objects.create(groupID = 0, description = f_description, amount = f_amount, paid_by = f_paid_by)
             transaction.owed_by.set(f_owed_by)
-            
             transaction.save()
 
             return redirect('/')
-
     else:
         transaction_form = TransactionForm()
+        transaction_form.fields['owed_by'].queryset = friends # limit the queryset to the user's friends
         page_data = { "transaction_form": transaction_form }
 
         return render(request, 'add_transaction.html', page_data)
