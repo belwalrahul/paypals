@@ -1,10 +1,12 @@
 {% include "paypals/header.html" %}
+
 <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-8">
+        {% include "paypals/messages.html" %}
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Friends List for {{user.first_name}} {{user.last_name}}</h5>
+            <h5 class="card-title">Friends Requests for {{user.first_name}} {{user.last_name}}</h5>
             <table class="table table-hover">
               <thead>
                 <tr>
@@ -14,35 +16,38 @@
                 </tr>
               </thead>
               <tbody>
-                {% for friend in friends %}
+                {% for req in requests %}
                 <tr>
-                  <td>{{ friend.first_name }} {{ friend.last_name }}</td>
-                  <td>{{ friend.username }}</td>
+                  <td>{{ req.from_user.first_name }} {{ req.from_user.last_name }}</td>
+                  <td>{{ req.from_user.username }}</td>
                   <td class="text-right">
-                    <form action="{% url 'remove_friend' friend.id %}" method="post">
+            <div class="d-flex justify-content-end">
+
+                    <form action="{% url 'accept_request' req.from_user.id %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            Remove Friend
+                        <button type="submit" class="btn btn-success btn-sm">
+                            Accept
                         </button>
                     </form>
+                    <form action="{% url 'remove_request' req.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            Cancel
+                        </button>
+                    </form>
+                </div>
                 </td>
                 </tr>
                 {% empty %}
                 <tr>
-                  <td colspan="3" class="text-center">No friends found.</td>
+                  <td colspan="3" class="text-center">No friend requests.</td>
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
-            <a href="/add_friend/">
-                <button type="button" class="btn btn-success" >
-                  Add Friend
-                </button>
-                </a>
           </div>
         </div>
       </div>
     </div>
   </div>
-
   
