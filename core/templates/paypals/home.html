@@ -45,7 +45,7 @@
             <td>{{ transaction.description }}</td>
             <td>{{ transaction.amount }}</td>
             <td>{{ transaction.paid_by.first_name }}</td>
-            <td >
+            <td>
               <div class="users-owed-btn" data-owed="{% for owed in owed_by.0 %}{{ owed.first_name }},{% endfor %}">
                 {{ owed_by.0.0.first_name}} 
                 {% if owed_by.0|length > 1 %}

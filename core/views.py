@@ -32,6 +32,9 @@ def home(request):
                     total_owed -= (owed.amount / noOfPeople)
         print("Owed: " + str(total_paid))
         print("Owe: " + str(total_owed))
+
+        group = "Individual Group"
+        
         for transaction in transactions:
             print(transaction)
             group = "Individual Group"
@@ -284,8 +287,6 @@ def callUserLogOutFn(request):
 
 @login_required(login_url='/login/')
 def grouppage(request,id):
-    print("^^^^^^^^^^^^^^^^^^^^^^^^^^")
-    print(id)
     group = Group.objects.get(groupID=id)
     userList = group.userList.all()
     values = {}
@@ -324,7 +325,7 @@ def grouppage(request,id):
                     borrowed[user.username] = borrow
                 else:
                     neutral[user.username] = values[user.username]
-        
+
         page_data = {"group": group, "transactions": transaction_data,"owed":owed,"borrowed":borrowed,"neutral":neutral}
     except Transactions.DoesNotExist:
         page_data = {"group": group}
