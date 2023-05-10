@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from core.forms import LoginForm, RegistrationForm, NewGroup, AddFriendForm, TransactionForm, GroupTransactionForm
-from core.models import Friend, Transactions, Group
+from core.models import Friend, Transactions, Group, FriendRequests
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
@@ -32,6 +32,7 @@ def home(request):
                     total_owed -= (owed.amount / noOfPeople)
         print("Owed: " + str(total_paid))
         print("Owe: " + str(total_owed))
+        group=""
         for transaction in transactions:
             print(transaction)
             group = "Individual Group"
@@ -163,7 +164,6 @@ def friends_list(request):
         friends = friend_obj.friends.all()
     except Friend.DoesNotExist:
         friends = []
-
     return render(request, 'paypals/friends_list.html', {'friends': friends})
 
 @login_required(login_url='/login/')
@@ -203,19 +203,14 @@ def add_friend(request):
             email = form.cleaned_data['email']
             try:
                 friend = User.objects.get(email=email)
+                if not(FriendRequests.objects.filter(from_user=request.user, to_user=friend).exists() or FriendRequests.objects.filter(from_user=friend, to_user=request.user).exists()):
+                    FriendRequests.objects.create(from_user=request.user, to_user=friend).save()
             except User.DoesNotExist:
+                messages.error(request, 'Invalid email.')
                 return render(request, 'paypals/add_friend.html', {'form': form, 'error': 'User with this email does not exist.'})
-            # friend_obj = Friend.objects.get(user=request.user)
-            friend_obj = Friend.objects.get_or_create(user=request.user)
-            if friend:
-                friend_obj, created = Friend.objects.get_or_create(user=request.user)
-                friend_obj.friends.add(friend)
-                friend_obj, created = Friend.objects.get_or_create(user=friend)
-                friend_obj.friends.add(request.user)
-
-                return redirect('/friends/')
-            else:
-                return render(request, 'paypals/add_friend.html', {'form': form})
+            return redirect('/friends/')
+        else:
+            return render(request, 'paypals/add_friend.html', {'form': form})
     else:
         form = AddFriendForm()
     return render(request, 'paypals/add_friend.html', {'form': form})
@@ -284,8 +279,6 @@ def callUserLogOutFn(request):
 
 @login_required(login_url='/login/')
 def grouppage(request,id):
-    print("^^^^^^^^^^^^^^^^^^^^^^^^^^")
-    print(id)
     group = Group.objects.get(groupID=id)
     userList = group.userList.all()
     values = {}
@@ -354,4 +347,47 @@ def add_grouptransaction(request,id):
         transaction_form = GroupTransactionForm(owed_by=userList)
         page_data = { "transaction_form": transaction_form }
         return render(request, 'paypals/addgrouptrans.html',page_data)
+
+@login_required(login_url='/login/')
+def friend_request(request):
+    if request.method == 'POST':
+        print("POST")
+        requests = []
+        return render(request, 'paypals/friend_request.html',{"requests":requests})
+    else:
+        try:
+            requests = FriendRequests.objects.filter(to_user=request.user).all()
+        except FriendRequests.DoesNotExist:
+            requests = []
+        return render(request, 'paypals/friend_request.html',{"requests":requests})
+
+def remove_request(request,id):
+    req = FriendRequests.objects.get(id=id)
+    req.delete()
+    messages.success(request,'Request removed.')
+    return redirect('/friend_request/')
+
+def accept_request(request,id):
+    newfriend = User.objects.get(id=id)
+    if newfriend:
+        friend_obj,created = Friend.objects.get_or_create(user=request.user)
+        friend_obj.friends.add(newfriend)
+        friend_obj,created = Friend.objects.get_or_create(user=newfriend)
+        friend_obj.friends.add(request.user)
+        messages.success(request,'Friend added.')
+    else:
+        messages.error(request,'Error adding friend.')
+    req = FriendRequests.objects.get(from_user=newfriend,to_user=request.user)
+    req.delete()
+    return redirect('/friend_request/')
     
+
+
+'''
+     friend_obj = Friend.objects.get_or_create(user=request.user)
+            if friend:
+                friend_obj, created = Friend.objects.get_or_create(user=request.user)
+                friend_obj.friends.add(friend)
+                friend_obj, created = Friend.objects.get_or_create(user=friend)
+                friend_obj.friends.add(request.user)
+'''

@@ -18,3 +18,7 @@ class Transactions(models.Model):
     paid_by = models.ForeignKey(User,on_delete=models.CASCADE)
     owed_by = models.ManyToManyField(User,related_name='owed_by')
     settled = models.BooleanField(default=False)
+
+class FriendRequests(models.Model):
+    from_user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='from_user')
+    to_user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='to_user')
