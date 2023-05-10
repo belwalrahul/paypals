@@ -23,8 +23,10 @@ def download_transactions(request):
     transactions = Transactions.objects.filter(paid_by=request.user) | Transactions.objects.filter(owed_by=request.user)
 
     for transaction in transactions:
-        
-        writer.writerow([transaction.description, transaction.paid_by, transaction.owed_by, transaction.amount])
+        owed_by_list = ""
+        for member in transaction.owed_by.all():
+            owed_by_list += member.username + ", "
+        writer.writerow([transaction.description, transaction.paid_by, owed_by_list, transaction.amount])
 
     return response
 
