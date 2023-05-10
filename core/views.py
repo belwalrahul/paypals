@@ -206,8 +206,14 @@ def add_friend(request):
             email = form.cleaned_data['email']
             try:
                 friend = User.objects.get(email=email)
-                if not(FriendRequests.objects.filter(from_user=request.user, to_user=friend).exists() or FriendRequests.objects.filter(from_user=friend, to_user=request.user).exists()):
-                    FriendRequests.objects.create(from_user=request.user, to_user=friend).save()
+                friends_list = Friend.objects.get(user=request.user)
+                if friend in friends_list.friends.all():
+                    messages.error(request, f'{friend.username} is already in your friends list.')
+                else:
+                    if not(FriendRequests.objects.filter(from_user=request.user, to_user=friend).exists() or FriendRequests.objects.filter(from_user=friend, to_user=request.user).exists()):
+                        FriendRequests.objects.create(from_user=request.user, to_user=friend).save()
+                    else:
+                        messages.error(request, 'Friend request already sent.')
             except User.DoesNotExist:
                 messages.error(request, 'Invalid email.')
                 return render(request, 'paypals/add_friend.html', {'form': form, 'error': 'User with this email does not exist.'})
