@@ -65,7 +65,7 @@ def groups(request):
 @login_required(login_url='/login/')
 def account_settings(request):
 
-    return render(request, 'account_settings.html')
+    return render(request, 'paypals/account_settings.html')
 
 
 @login_required(login_url='/login/')
@@ -88,7 +88,7 @@ def add_groups(request):
     else:
         Groupform = NewGroup(userList=userList)
         page_data = { "Groupform": Groupform  }
-        return render(request, 'addgroups.html',page_data)
+        return render(request, 'paypals/addgroups.html',page_data)
 
 
 @login_required(login_url='/login/')
@@ -131,11 +131,11 @@ def add_transaction(request):
         transaction_form.fields['paid_by'].queryset = paid_by_list.distinct() # limit the queryset to the user's friends
         page_data = { "transaction_form": transaction_form }
 
-        return render(request, 'add_transaction.html', page_data)
+        return render(request, 'paypals/add_transaction.html', page_data)
 
 @login_required(login_url='/login/')
 def about(request):
-    return render(request, 'about.html')
+    return render(request, 'paypals/about.html')
 
 @login_required(login_url='/login/')
 def remove_friend(request, friend_id):
@@ -328,7 +328,7 @@ def grouppage(request,id):
         page_data = {"group": group, "transactions": transaction_data,"owed":owed,"borrowed":borrowed,"neutral":neutral}
     except Transactions.DoesNotExist:
         page_data = {"group": group}
-    return render(request, 'grouppage.html',page_data)
+    return render(request, 'paypals/grouppage.html',page_data)
 
 @login_required(login_url='/login/')
 def add_grouptransaction(request,id):
