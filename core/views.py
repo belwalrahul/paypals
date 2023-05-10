@@ -9,6 +9,26 @@ from django.contrib import messages
 
 # Create your views here.
 
+import csv
+from django.http import HttpResponse
+
+@login_required(login_url='/login/')
+def download_transactions(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="transactions.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['DESCRIPTION', 'PAID_BY', 'OWED_BY', 'AMOUNT_OWED'])
+
+    transactions = Transactions.objects.filter(paid_by=request.user) | Transactions.objects.filter(owed_by=request.user)
+
+    for transaction in transactions:
+        writer.writerow([transaction.description, transaction.paid_by, transaction.owed_by, transaction.amount])
+
+    return response
+
+
+
 @login_required(login_url='/login/')
 def home(request):
     page_data = {}
@@ -30,13 +50,18 @@ def home(request):
                     total_owed += (owed.amount / noOfPeople)
                 else:
                     total_owed -= (owed.amount / noOfPeople)
+<<<<<<< HEAD
         print("Owed: " + str(total_paid))
         print("Owe: " + str(total_owed))
 
         group = "Individual Group"
         
+=======
+        # print("Owed: " + str(total_paid))
+        # print("Owe: " + str(total_owed))
+>>>>>>> 9db08af0d70813fac9de9c310b72ade24c3a0891
         for transaction in transactions:
-            print(transaction)
+            # print(transaction)
             group = "Individual Group"
 
             if transaction.groupID != 0:
@@ -44,14 +69,14 @@ def home(request):
                 # group[transaction.groupID] = group_name.groupName
                 group = group_name.groupName
 
-            print(group)
+            # print(group)
             transaction_data[transaction] = [ transaction.owed_by.all(), group ]
         # print("----------------> " + transactions + " <----------------")a
         page_data = { "transactions": transaction_data, "owed": total_paid, "owe": total_owed, "group": group }
     except Transactions.DoesNotExist:
         page_data = {}
 
-    print(page_data)
+    # print(page_data)
 
     return render(request, 'paypals/home.html', page_data)
 
