@@ -50,16 +50,11 @@ def home(request):
                     total_owed += (owed.amount / noOfPeople)
                 else:
                     total_owed -= (owed.amount / noOfPeople)
-<<<<<<< HEAD
         print("Owed: " + str(total_paid))
         print("Owe: " + str(total_owed))
 
         group = "Individual Group"
         
-=======
-        # print("Owed: " + str(total_paid))
-        # print("Owe: " + str(total_owed))
->>>>>>> 9db08af0d70813fac9de9c310b72ade24c3a0891
         for transaction in transactions:
             # print(transaction)
             group = "Individual Group"
