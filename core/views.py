@@ -127,7 +127,8 @@ def add_transaction(request):
     else:
         transaction_form = TransactionForm()
         transaction_form.fields['owed_by'].queryset = friends # limit the queryset to the user's friends
-        transaction_form.fields['paid_by'].queryset = friends # limit the queryset to the user's friends
+        paid_by_list = friends | User.objects.filter(id=request.user.id)
+        transaction_form.fields['paid_by'].queryset = paid_by_list.distinct() # limit the queryset to the user's friends
         page_data = { "transaction_form": transaction_form }
 
         return render(request, 'add_transaction.html', page_data)
