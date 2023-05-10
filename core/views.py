@@ -188,7 +188,7 @@ def charts(request):
         print("Owed: " + str(total_paid))
         print("Owe: " + str(total_owed))
 
-        page_data = { "series": [ total_paid, total_owed ] }
+        page_data = { "owed": total_paid, "owe": total_owed }
 
     except Transactions.DoesNotExist:
         page_data = {}

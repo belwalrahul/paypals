@@ -7,11 +7,17 @@
 
 <div class="chart">              
 </div>
+<div>
+    
+</div>
 
 <script>
+    var owed = "{{ owed }}"
+    var owe  = "{{ owe }}"
     var data = {
-        series: [5, 3, 4]
+        series: [ owed, owe ]
     };
+
 
     var sum = function(a, b) { return a + b };
 
