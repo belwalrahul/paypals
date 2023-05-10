@@ -1,6 +1,9 @@
 {% include "paypals/header.html" %}
 <div class="container mt-5">
-
+  <a href="{% url 'download_transactions' %}">
+    <button class="btn btn-primary mb-3">
+      CSV chaiye toh bata</button>
+  </a>
   <div class="row justify-content-center">
     <div class="col-md-6 text-center">
       <div class="row">
@@ -45,31 +48,32 @@
             <td>{{ transaction.description }}</td>
             <td>{{ transaction.amount }}</td>
             <td>{{ transaction.paid_by.first_name }}</td>
-            <td >
+            <td>
               <div class="users-owed-btn" data-owed="{% for owed in owed_by.0 %}{{ owed.first_name }},{% endfor %}">
-                {{ owed_by.0.0.first_name}} 
+                {{ owed_by.0.0.first_name}}
                 {% if owed_by.0|length > 1 %}
                 +{{ owed_by.0|length|add:"-1" }}
-                  <i class="fas fa-users"></i>
+                <i class="fas fa-users"></i>
                 {% endif %}
               </div>
             </td>
-            <td><a href="{% url 'delete_transaction' transaction.id %}"><button class="btn btn-success">Settle Up</button></a></td>
+            <td><a href="{% url 'delete_transaction' transaction.id %}"><button class="btn btn-success">Settle
+                  Up</button></a></td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
       {% else %}
-  <div class="alert alert-danger">
-    <p class="mb-0">No transactions to display.</p>
-  </div>
-{% endif %}
-<a href="/add_transaction/">
-<button type="button" class="btn btn-success" >
-  Add Transaction
-</button>
-</a>
+      <div class="alert alert-danger">
+        <p class="mb-0">No transactions to display.</p>
+      </div>
+      {% endif %}
+      <a href="/add_transaction/">
+        <button type="button" class="btn btn-success">
+          Add Transaction
+        </button>
+      </a>
     </div>
-    
+
   </div>
 </div>

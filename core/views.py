@@ -9,6 +9,26 @@ from django.contrib import messages
 
 # Create your views here.
 
+import csv
+from django.http import HttpResponse
+
+@login_required(login_url='/login/')
+def download_transactions(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="transactions.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'User', 'Amount', 'Date'])
+
+    transactions = Transactions.objects.filter(paid_by=request.user) | Transactions.objects.filter(owed_by=request.user)
+
+    for transaction in transactions:
+        writer.writerow([transaction.paid_by, transaction.owed_by, transaction.amount, transaction.description])
+
+    return response
+
+
+
 @login_required(login_url='/login/')
 def home(request):
     page_data = {}
