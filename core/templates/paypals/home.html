@@ -6,14 +6,6 @@
 {% include "paypals/header.html" %}
 
 <div class="container mt-5">
-  <a href="{% url 'download_transactions' %}">
-    <button class="btn btn-primary mb-3">
-      Download Transaction Data as CSV
-    </button>
-  </a>
-
-
-
   <div class="row justify-content-center">
     <div class="col-md-6 text-center">
       <div class="row">
@@ -33,19 +25,21 @@
     </div>
   </div>
 
-
-
-
 </div>
 
 <div class="container-fluid">
-  <div class="row">
+  <div class="row justify-content-center">
     <div class="col-lg-8">
       <!-- Left Column Content -->
-
+      
       <div class="container-fluid">
         <div class="row justify-content-center">
-          <div class="col-lg-6 py-4">
+          <div class="col-lg-10 py-4">
+            <a href="/add_transaction/">
+              <button type="button" class="btn btn-success ml-6 my-2">
+                Add Transaction
+              </button>
+            </a>
             {% include "paypals/messages.html" %}
             {% if transactions %}
             <table class="table table-bordered table-striped custom-table">
@@ -87,23 +81,23 @@
               <p class="mb-0">No transactions to display.</p>
             </div>
             {% endif %}
-            <a href="/add_transaction/">
-              <button type="button" class="btn btn-success">
-                Add Transaction
-              </button>
-            </a>
+
           </div>
       
         </div>
       </div>
-            <p>This is the content of the left column.</p>
-    </div>
-    <div class="col-lg-2">
+      </div>
+    <div class="col-lg justify-content-center">
       <!-- Right Column Content -->
-
       <div class="chart">
       </div>
-      <p>This is the content of the right column.</p>
+      <div class = "row justify-content-center">
+      <a href="{% url 'download_transactions' %}">
+        <button class="btn btn-primary">
+          Download Data as CSV</button>
+      </a>
+    </div>
+    </div>
     </div>
   </div>
 </div>
@@ -115,12 +109,12 @@
     series: [owed, owe]
   };
   var optionsT = {
-    width: "300px",
-    height: "300px",
+    width: "400px",
+    height: "400px",
   };
 
   var options = {
-    colors: ['#00FF00', '#00FF00']
+    colors: ['#FFFFFF', '#000000']
   };
 
   new Chartist.Pie('.chart', data, optionsT);
