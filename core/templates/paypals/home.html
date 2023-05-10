@@ -1,4 +1,10 @@
+<head>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+  <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+</head>
+
 {% include "paypals/header.html" %}
+
 <div class="container mt-5">
   <a href="{% url 'download_transactions' %}">
     <button class="btn btn-primary mb-3">
@@ -22,6 +28,9 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="chart">
   </div>
 </div>
 
@@ -78,3 +87,18 @@
 
   </div>
 </div>
+
+<script>
+  var owed = "{{ owed }}"
+  var owe  = "{{ owe }}"
+  var data = {
+      series: [ owed, owe ]
+  };
+
+
+  var options = {
+    colors: ['#00FF00', '#00FF00']
+  };
+
+  new Chartist.Pie('.chart', data, options);
+</script>
