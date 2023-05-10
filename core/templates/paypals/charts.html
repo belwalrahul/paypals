@@ -1,0 +1,23 @@
+<head>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+</head>
+
+{% include "paypals/header.html" %}
+
+<div class="chart">              
+</div>
+
+<script>
+    var data = {
+        series: [5, 3, 4]
+    };
+
+    var sum = function(a, b) { return a + b };
+
+    new Chartist.Pie('.chart', data, {
+        labelInterpolationFnc: function(value) {
+            return Math.round(value / data.series.reduce(sum) * 100) + '%';
+        }
+    });
+</script>
