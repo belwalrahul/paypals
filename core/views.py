@@ -126,8 +126,8 @@ def add_transaction(request):
             return redirect('/')
     else:
         transaction_form = TransactionForm()
-        transaction_form.fields['owed_by'].queryset = friends # limit the queryset to the user's friends
         paid_by_list = friends | User.objects.filter(id=request.user.id)
+        transaction_form.fields['owed_by'].queryset = paid_by_list.distinct() # limit the queryset to the user's friends
         transaction_form.fields['paid_by'].queryset = paid_by_list.distinct() # limit the queryset to the user's friends
         page_data = { "transaction_form": transaction_form }
 
@@ -165,6 +165,35 @@ def friends_list(request):
         friends = []
 
     return render(request, 'paypals/friends_list.html', {'friends': friends})
+
+@login_required(login_url='/login/')
+def charts(request):
+    page_data = {}
+    total_paid = 0
+    total_owed = 0
+    try:
+        transactions = Transactions.objects.filter(owed_by = request.user)
+        transactions_paid = Transactions.objects.filter(paid_by = request.user)
+
+        for paid in transactions_paid:
+            noOfPeople = paid.owed_by.count()
+            total_paid += ((paid.amount / noOfPeople) * (noOfPeople-1))
+        for owed in transactions:
+            if owed.paid_by != request.user:
+                noOfPeople = owed.owed_by.count()
+                if owed.paid_by != request.user:
+                    total_owed += (owed.amount / noOfPeople)
+                else:
+                    total_owed -= (owed.amount / noOfPeople)
+        print("Owed: " + str(total_paid))
+        print("Owe: " + str(total_owed))
+
+        page_data = { "series": [ total_paid, total_owed ] }
+
+    except Transactions.DoesNotExist:
+        page_data = {}
+
+    return render(request, 'paypals/charts.html', page_data)
 
 @login_required(login_url='/login/')
 def add_friend(request):
