@@ -40,6 +40,10 @@
                 Add Transaction
               </button>
             </a>
+            <a href="{% url 'download_transactions' %}">
+              <button class="btn btn-primary">
+                Download Data as CSV</button>
+            </a>
             {% include "paypals/messages.html" %}
             {% if transactions %}
             <table class="table table-bordered table-striped custom-table">
@@ -91,11 +95,7 @@
       <!-- Right Column Content -->
       <div class="chart">
       </div>
-      <div class = "container mt-5 p-5">
-      <a href="{% url 'download_transactions' %}">
-        <button class="btn btn-primary">
-          Download Data as CSV</button>
-      </a>
+      <div class = "row justify-content-center my-2 mr-3">
     </div>
     </div>
     </div>
