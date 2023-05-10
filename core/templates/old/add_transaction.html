@@ -1,0 +1,21 @@
+{% include "paypals/header.html" %}
+<body>
+    <h1 class="text-center">Transaction</h1>
+    <div class="container px-10">
+
+        <div class="card">
+            <form method="POST" class="mt-5">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        {{transaction_form.as_p}}
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <input type="submit" class="btn btn-primary" value="Add Transaction" />
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
