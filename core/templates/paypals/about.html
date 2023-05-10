@@ -1,1 +1,27 @@
 {% include "paypals/header.html" %}
+
+<div class="container">
+    <h1>About Us</h1>
+    <p>PayPals is an expense tracking and transaction splitting app which makes it easier to track transactions done by you and the amount of money your friends owe you or you owe them.</p>
+    <p>Tl;dr - It makes paying back and keeping tabs easier!</p>
+    <p>Here is a use case:</p>
+    <ol>
+      <li>
+        <strong>Create a Group:</strong> Alice creates a group, adds Bob and Charlie to the group, and names the group "<span class="group-name">Roommates</span>". This group will be used to track all their expenses.
+      </li>
+      <li>
+        <strong>Add expenses:</strong> Alice buys groceries for the week, which comes to $150. She adds the expense and assigns it to the "<span class="expense-category">Groceries</span>" category. PayPals shows that Alice paid $150 and Bob and Charlie both <span class="owe-you">owe her $50</span>.
+      </li>
+      <li>
+        <strong>Split bills:</strong> Bob pays the Utilities for the apartment, which is $120. He adds the expense and assigns it to the "<span class="expense-category">Utilities</span>" category. PayPals shows that Bob paid $120 and Charlie and Alice both <span class="you-owe">owe him $40</span>.
+      </li>
+      <li>
+        <strong>Custom Expenses:</strong> Alice pays $60 for her and Bob to go to a concert. She adds the expense and assigns it to the "<span class="expense-category">Entertainment</span>" category and splits it between her and Bob. PayPals shows that Alice paid $60 and Bob <span class="you-owe">owes her $30</span>.
+      </li>
+      <li>
+        <strong>Settle up:</strong> Alice pays Bob $30 for the concert ticket. She adds the expense and assigns it to the "<span class="expense-category">Entertainment</span>" category. PayPals shows that Alice paid $30 and Bob <span class="owe-you">owes her nothing</span>.
+        </li>
+    </ol>
+    <p>At the end of the month, PayPals shows that Alice spent $240, Bob spent $120, and Charlie spent $0. Alice <span class="you-owe">owes Bob $10</span> and <span class="you-owe">owes Charlie $115</span>. Bob <span class="owe-you">owes Alice $10</span> and <span class="owe-you">owes Charlie $40</span>. Charlie <span class="owe-you">owes Alice $115</span> and <span class="owe-you">owes Bob $40</span>.</p>
+    <p>PayPals makes it easy to track expenses and settle up at the end of the month!</p>
+</div>
