@@ -23,6 +23,7 @@ def download_transactions(request):
     transactions = Transactions.objects.filter(paid_by=request.user) | Transactions.objects.filter(owed_by=request.user)
 
     for transaction in transactions:
+        
         writer.writerow([transaction.description, transaction.paid_by, transaction.owed_by, transaction.amount])
 
     return response
@@ -207,35 +208,6 @@ def friends_list(request):
     except Friend.DoesNotExist:
         friends = []
     return render(request, 'paypals/friends_list.html', {'friends': friends})
-
-@login_required(login_url='/login/')
-def charts(request):
-    page_data = {}
-    total_paid = 0
-    total_owed = 0
-    try:
-        transactions = Transactions.objects.filter(owed_by = request.user)
-        transactions_paid = Transactions.objects.filter(paid_by = request.user)
-
-        for paid in transactions_paid:
-            noOfPeople = paid.owed_by.count()
-            total_paid += ((paid.amount / noOfPeople) * (noOfPeople-1))
-        for owed in transactions:
-            if owed.paid_by != request.user:
-                noOfPeople = owed.owed_by.count()
-                if owed.paid_by != request.user:
-                    total_owed += (owed.amount / noOfPeople)
-                else:
-                    total_owed -= (owed.amount / noOfPeople)
-        print("Owed: " + str(total_paid))
-        print("Owe: " + str(total_owed))
-
-        page_data = { "owed": total_paid, "owe": total_owed }
-
-    except Transactions.DoesNotExist:
-        page_data = {}
-
-    return render(request, 'paypals/charts.html', page_data)
 
 @login_required(login_url='/login/')
 def add_friend(request):

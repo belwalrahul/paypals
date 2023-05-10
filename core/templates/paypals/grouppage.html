@@ -57,14 +57,14 @@
     <ul>
       {%for user,amount in owed.items%}
         {% if amount > 0 %}
-          <li>You owe {{amount}} to {{user}}</li>
+          <li>You owe <span class="you-owe">{{amount}}</span> to {{user}}</li>
         {% endif %}
       {% empty %}
         <li>You don't owe anyone anything</li>
       {% endfor %}
       {%for user,amount in borrowed.items%}
         {% if amount > 0 %}
-          <li>{{user}} owes you {{amount}}</li>
+          <li>{{user}} owes you <span class="owe-you">{{amount}}</span></li>
         {% endif %}
       {% empty %}
         <li>Nobody owes you anything</li>
