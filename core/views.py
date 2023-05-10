@@ -53,8 +53,6 @@ def home(request):
                     total_owed += (owed.amount / noOfPeople)
                 else:
                     total_owed -= (owed.amount / noOfPeople)
-        print("Owed: " + str(total_paid))
-        print("Owe: " + str(total_owed))
 
         group = "Individual Group"
         
@@ -80,8 +78,6 @@ def home(request):
 
 @login_required(login_url='/login/')
 def groups(request):
-    print(request.user.id)
-    print(request.user.userList.all())
     groups = Group.objects.filter(userList = request.user.id)
     groupnames = [group.groupName for group in groups]
     members = [group.userList.all() for group in groups]
@@ -99,12 +95,10 @@ def add_groups(request):
     userList = Friend.objects.filter(user=request.user).values_list('friends__id', 'friends__username')
     userList = [User(id=friend[0], username=friend[1]) for friend in userList]
     if (request.method == "POST"):
-        print("POST")
         Groupform = NewGroup(request.POST,userList=userList)
         if Groupform.is_valid():
             groupname = Groupform.cleaned_data['groupName']
             friends_list = Groupform.cleaned_data['userList'] | User.objects.filter(id=request.user.id)
-            print(friends_list)
             group = Group.objects.create(groupName=groupname)
             group.userList.set(friends_list)
             group.save()
@@ -119,12 +113,10 @@ def add_groups(request):
 
 @login_required(login_url='/login/')
 def delete_transaction(request, pk):
-    print(pk)
     try:
         transaction = Transactions.objects.get(id=pk)
         if transaction.paid_by == request.user:
             transaction.delete()
-            print(transaction)
             messages.success(request, 'Transaction deleted successfully.')
         else:
             # TODO @jait send data to modal/ toast on frontend
@@ -136,18 +128,14 @@ def delete_transaction(request, pk):
 
 @login_required(login_url='/login/')
 def delete_group(request, pk):
-    print(pk)
     try:
         group = Group.objects.get(groupID = pk)
         group.delete()
-        print(group)
-
         messages.success(request, 'Group deleted successfully.')
 
         transactions = Transactions.objects.filter(groupID=pk)
         for transaction in transactions:
             transaction.delete()
-            print(transaction)
         
     except Transactions.DoesNotExist:
         # lets just keep this on the backend
@@ -205,7 +193,6 @@ def remove_friend(request, friend_id):
 def friends_list(request):
     try:
         friend_obj = Friend.objects.get(user=request.user)
-        # print(friend_obj.friends)
         friends = friend_obj.friends.all()
     except Friend.DoesNotExist:
         friends = []
@@ -279,8 +266,6 @@ def callUserLoginFn(request):
                     # If account is not active:
                     return HttpResponse("Your account is not active.")
             else:
-                print("Someone tried to login and failed.")
-                print("They used username: {} and password: {}".format(username,password))
                 return render(request, 'paypals/login.html', {'login_form': LoginForm, 'title':'User Login', 'title':'Login'})
     else:
         # Nothing has been provided for username or password.
@@ -320,7 +305,6 @@ def grouppage(request,id):
                     if user['username'] == str(request.user):
                         values[str(transaction.paid_by)] += amount_per_person
 
-        print(values)
         owed = {}
         borrowed = {}
         neutral = {}
@@ -343,7 +327,6 @@ def grouppage(request,id):
 def add_grouptransaction(request,id):
     group = Group.objects.get(groupID=id)
     userList = group.userList.all()
-    print(userList)
     page_data = { "group": group  }
     if request.method == 'POST':
         form = GroupTransactionForm(request.POST,owed_by=userList)
@@ -366,7 +349,6 @@ def add_grouptransaction(request,id):
 @login_required(login_url='/login/')
 def friend_request(request):
     if request.method == 'POST':
-        print("POST")
         requests = []
         return render(request, 'paypals/friend_request.html',{"requests":requests})
     else:

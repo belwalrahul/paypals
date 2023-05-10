@@ -51,29 +51,39 @@
   </div>
 </div>
 
-<div>
-  <h3>Summary</h3>
-  <div>
-    <ul>
-      {%for user,amount in owed.items%}
-        {% if amount > 0 %}
-          <li>You owe <span class="you-owe">{{amount}}</span> to {{user}}</li>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card border-0 shadow-lg">
+          <div class="card-body">
+            <div class="row">
+            <div class="col-sm mb-3">
+              
+              <div class="text-success">
+                <h4>Owed by You</h4>
+                {%for user,amount in owed.items%}
+                {% if amount > 0 %}
+                <p class="mb-0">{{user}}: <span class="you-owe">${{amount}}</span></p>
         {% endif %}
       {% empty %}
-        <li>You don't owe anyone anything</li>
+      <p class="mb-0">You don't owe anyone anything</p>
       {% endfor %}
-      {%for user,amount in borrowed.items%}
-        {% if amount > 0 %}
-          <li>{{user}} owes you <span class="owe-you">{{amount}}</span></li>
+              </div>
+            </div>
+            <div class="col-sm mb-3">
+              <div class="text-danger">
+                <h4>Owed to You</h4>
+                {%for user,amount in borrowed.items%}
+                {% if amount > 0 %}
+                <p class="mb-0">{{user}}: <span class="owe-you">${{amount}}</span></p>
         {% endif %}
       {% empty %}
-        <li>Nobody owes you anything</li>
+      <p class="mb-0">no one owes you anything</p>
       {% endfor %}
-      {%for user,amount in neutral.items%}
-        {% if amount == 0 %}
-          <li>Everything settled with {{user}}</li>
-        {% endif %}
-      {% endfor %}
-    </ul>
-  </div>
-</div>
+              </div>
+            </div>
+            </div>
+            </div>
+          </div>
+    </div>
+    </div>
