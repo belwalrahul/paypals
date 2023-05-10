@@ -9,6 +9,26 @@ from django.contrib import messages
 
 # Create your views here.
 
+import csv
+from django.http import HttpResponse
+
+@login_required(login_url='/login/')
+def download_transactions(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="transactions.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['DESCRIPTION', 'PAID_BY', 'OWED_BY', 'AMOUNT_OWED'])
+
+    transactions = Transactions.objects.filter(paid_by=request.user) | Transactions.objects.filter(owed_by=request.user)
+
+    for transaction in transactions:
+        writer.writerow([transaction.description, transaction.paid_by, transaction.owed_by, transaction.amount])
+
+    return response
+
+
+
 @login_required(login_url='/login/')
 def home(request):
     page_data = {}
@@ -32,9 +52,11 @@ def home(request):
                     total_owed -= (owed.amount / noOfPeople)
         print("Owed: " + str(total_paid))
         print("Owe: " + str(total_owed))
-        group=""
+
+        group = "Individual Group"
+        
         for transaction in transactions:
-            print(transaction)
+            # print(transaction)
             group = "Individual Group"
 
             if transaction.groupID != 0:
@@ -42,14 +64,14 @@ def home(request):
                 # group[transaction.groupID] = group_name.groupName
                 group = group_name.groupName
 
-            print(group)
+            # print(group)
             transaction_data[transaction] = [ transaction.owed_by.all(), group ]
         # print("----------------> " + transactions + " <----------------")a
         page_data = { "transactions": transaction_data, "owed": total_paid, "owe": total_owed, "group": group }
     except Transactions.DoesNotExist:
         page_data = {}
 
-    print(page_data)
+    # print(page_data)
 
     return render(request, 'paypals/home.html', page_data)
 
@@ -317,7 +339,7 @@ def grouppage(request,id):
                     borrowed[user.username] = borrow
                 else:
                     neutral[user.username] = values[user.username]
-        
+
         page_data = {"group": group, "transactions": transaction_data,"owed":owed,"borrowed":borrowed,"neutral":neutral}
     except Transactions.DoesNotExist:
         page_data = {"group": group}
@@ -347,7 +369,6 @@ def add_grouptransaction(request,id):
         transaction_form = GroupTransactionForm(owed_by=userList)
         page_data = { "transaction_form": transaction_form }
         return render(request, 'paypals/addgrouptrans.html',page_data)
-
 @login_required(login_url='/login/')
 def friend_request(request):
     if request.method == 'POST':
@@ -382,12 +403,3 @@ def accept_request(request,id):
     return redirect('/friend_request/')
     
 
-
-'''
-     friend_obj = Friend.objects.get_or_create(user=request.user)
-            if friend:
-                friend_obj, created = Friend.objects.get_or_create(user=request.user)
-                friend_obj.friends.add(friend)
-                friend_obj, created = Friend.objects.get_or_create(user=friend)
-                friend_obj.friends.add(request.user)
-'''
