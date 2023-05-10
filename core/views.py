@@ -132,6 +132,26 @@ def delete_transaction(request, pk):
     return redirect('/')
 
 @login_required(login_url='/login/')
+def delete_group(request, pk):
+    print(pk)
+    try:
+        group = Group.objects.get(groupID = pk)
+        group.delete()
+        print(group)
+
+        messages.success(request, 'Group deleted successfully.')
+
+        transactions = Transactions.objects.filter(groupID=pk)
+        for transaction in transactions:
+            transaction.delete()
+            print(transaction)
+        
+    except Transactions.DoesNotExist:
+        # lets just keep this on the backend
+        messages.error(request, 'Transaction does not exist.')
+    return redirect('/')
+
+@login_required(login_url='/login/')
 def add_transaction(request):
     friends = Friend.objects.get(user=request.user).friends.all() # get the user's friends
     if request.method == 'POST':
