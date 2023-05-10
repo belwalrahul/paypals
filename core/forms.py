@@ -37,6 +37,7 @@ class AddFriendForm(forms.Form):
 
 
 class TransactionForm(forms.ModelForm):
+    owed_by = forms.ModelMultipleChoiceField(queryset=User.objects.all().order_by('first_name'),label="Owed", widget=forms.CheckboxSelectMultiple(attrs={'class': 'custom-checkboxes'}))
     class Meta:
         model = Transactions
         fields = ('description', 'amount', 'paid_by', 'owed_by')
