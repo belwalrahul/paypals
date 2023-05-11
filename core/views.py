@@ -113,9 +113,12 @@ def add_groups(request):
 
 @login_required(login_url='/login/')
 def delete_transaction(request, pk):
+    group_id = 0
     try:
         transaction = Transactions.objects.get(id=pk)
         if transaction.paid_by == request.user:
+            if transaction.groupID != 0:
+                group_id = transaction.groupID
             transaction.delete()
             messages.success(request, 'Transaction deleted successfully.')
         else:
@@ -124,7 +127,10 @@ def delete_transaction(request, pk):
     except Transactions.DoesNotExist:
         # lets just keep this on the backend
         messages.error(request, 'Transaction does not exist.')
-    return redirect('/')
+    if group_id != 0:
+        return redirect('/')
+    else:
+        return redirect(grouppage, id=group_id)
 
 @login_required(login_url='/login/')
 def delete_group(request, pk):
