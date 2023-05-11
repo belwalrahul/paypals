@@ -127,10 +127,7 @@ def delete_transaction(request, pk):
     except Transactions.DoesNotExist:
         # lets just keep this on the backend
         messages.error(request, 'Transaction does not exist.')
-    if group_id != 0:
-        return redirect('/')
-    else:
-        return redirect(grouppage, id=group_id)
+    return redirect('/')
 
 @login_required(login_url='/login/')
 def delete_group(request, pk):
