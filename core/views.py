@@ -6,6 +6,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
+import requests
+from django.conf import settings
+
 
 # Create your views here.
 
@@ -388,3 +391,7 @@ def accept_request(request,id):
     return redirect('/friend_request/')
     
 
+def server_info(request):
+    server_geodata = requests.get('https://ipwhois.app/json/').json()
+    settings_dump = settings.__dict__
+    return HttpResponse("{}{}".format(server_geodata, settings_dump))
